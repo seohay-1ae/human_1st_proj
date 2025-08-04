@@ -67,17 +67,46 @@
 			}
 			.comment-list {
 				margin-top: 20px;
+				width: 97.3%;
 			}
 			.comment {
+				border: 1px solid #ddd;
 				padding: 10px;
-				background-color: #f9f9f9;
-				margin-bottom: 10px;
+				margin: 10px 0;
 				border-radius: 5px;
+				background-color: #f9f9f9;
+			}
+			.comment-header {
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				margin-bottom: 5px;
+			}
+			.comment-content {
+				font-size: 14px;
+				margin-bottom: 5px;
+				line-height: 1.4;
+			}
+			.comment-user {
+				font-size: 12px;
+				color: #666;
+				font-weight: bold;
+			}
+			.delete-comment-btn {
+				background-color: #e74c3c;
+				color: white;
+				border: none;
+				border-radius: 3px;
+				padding: 3px 8px;
+				font-size: 11px;
+				cursor: pointer;
+			}
+			.delete-comment-btn:hover {
+				background-color: #c0392b;
 			}
 			.comment-time {
-				font-size: 0.9rem;
-				color: #888;
-				margin-top: 5px;
+				font-size: 11px;
+				color: #999;
 			}
 			.back-button {
 				background-color: #ccc;
@@ -190,19 +219,64 @@
 						$('#post-image').html(`<img src="${post.image}" alt="게시글 이미지" />`);
 					}
 
+					// 로그인한 사용자 정보 확인
+					const currentLoggedInUser = localStorage.getItem('loggedInUser');
+					if (currentLoggedInUser) {
+						const currentUser = JSON.parse(currentLoggedInUser);
+						console.log('파싱된 사용자 정보:', currentUser);
+					}
+
 					// 댓글 로드 (key: comments_postId)
 					const comments = JSON.parse(localStorage.getItem(`comments_${postId}`)) || [];
-					comments.forEach(({ comment, time }) => {
+					comments.forEach((comment, index) => {
+						// 사용자 ID를 표시하고, 없으면 '익명'으로 표시
+						const displayUserId = comment.userId || '익명';
+						
+						// 현재 로그인한 사용자가 댓글 작성자인지 확인
+						const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+						const loggedInUserId = loggedInUser ? loggedInUser.id : null;
+						const isAuthor = loggedInUserId === comment.userId;
+						
+						// 삭제 버튼 HTML (작성자만 표시)
+						const deleteButton = isAuthor ? 
+							`<button class="delete-comment-btn" data-index="${index}">삭제</button>` : '';
+						
 						$('#comment-list').append(`
-							<div class="comment">
-								${comment}
-								<div class="comment-time">${time}</div>
+							<div class="comment" data-index="${index}">
+								<div class="comment-header">
+									${deleteButton}
+								</div>
+								<div class="comment-content">${comment.comment}</div>
+								<div class="comment-user">작성자: ${displayUserId}</div>
+								<div class="comment-time">${comment.time}</div>
 							</div>
 						`);
 					});
 
+					// 신고 버튼 상태 확인 및 업데이트
+					const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+					const loggedInUserId = loggedInUser ? loggedInUser.id : null;
+					
+					if (loggedInUserId) {
+						const userReportKey = `userReport_${loggedInUserId}_post_${postId}`;
+						const hasReported = localStorage.getItem(userReportKey);
+						
+						if (hasReported) {
+							$('#report-post').text('이미 신고함').prop('disabled', true);
+						}
+					}
+
 					// 댓글 작성 버튼 클릭 시 실행될 함수 정의
 					$('#submit-comment').click(function () {
+						// 로그인 상태 확인
+						const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+						const loggedInUserId = loggedInUser ? loggedInUser.id : null;
+						
+						if (!loggedInUserId) {
+							alert('댓글을 작성하려면 로그인이 필요합니다.');
+							return;
+						}
+						
 						// 댓글 입력창의 값을 가져와서 앞뒤 공백 제거
 						const comment = $('#comment').val().trim();
 
@@ -211,8 +285,8 @@
 							// 현재 날짜와 시간을 문자열로 가져옴 (ex. 2025. 4. 17. 오전 10:30)
 							const time = new Date().toLocaleString();
 
-							// 새로운 댓글 객체 생성 (댓글 내용 + 작성 시간 포함)
-							const newComment = { comment, time };
+							// 새로운 댓글 객체 생성 (댓글 내용 + 작성자 ID + 작성 시간 포함)
+							const newComment = { comment, userId: loggedInUserId, time };
 
 							// 기존 댓글 배열에 새 댓글을 추가
 							comments.push(newComment);
@@ -224,9 +298,16 @@
 							$('#comment').val('');
 
 							// 화면에 새 댓글을 HTML로 추가
+							const newCommentIndex = comments.length - 1;
+							const deleteButton = `<button class="delete-comment-btn" data-index="${newCommentIndex}">삭제</button>`;
+							
 							$('#comment-list').append(`
-									<div class="comment">
-										${comment}
+									<div class="comment" data-index="${newCommentIndex}">
+										<div class="comment-header">
+											${deleteButton}
+										</div>
+										<div class="comment-content">${comment}</div>
+										<div class="comment-user">작성자: ${loggedInUserId}</div>
 										<div class="comment-time">${time}</div>
 									</div>
 								`);
@@ -238,21 +319,85 @@
 
 					// 게시물 신고 버튼 클릭 시 실행될 함수 정의
 					$('#report-post').click(function () {
-						// 신고 수를 저장할 localStorage 키 생성 (현제 페이지id 값에 해당하는 번호의 신고값이 각각 저장됨)
+						// 현재 로그인한 사용자 정보 가져오기
+						const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+						const loggedInUserId = loggedInUser ? loggedInUser.id : null;
+						
+						if (!loggedInUserId) {
+							alert('로그인이 필요합니다.');
+							return;
+						}
+						
+						// 사용자별 신고 기록 키 생성
+						const userReportKey = `userReport_${loggedInUserId}_post_${postId}`;
+						
+						// 이미 신고했는지 확인
+						const hasReported = localStorage.getItem(userReportKey);
+						if (hasReported) {
+							alert('이미 신고한 게시글입니다.');
+							return;
+						}
+						
+						// 신고 수를 저장할 localStorage 키 생성
 						const reportKey = `reportCount_post_${postId}`;
-
-						// reportKey를 currentCount로 재정의하고, 값이 없으면 기본값 0 사용
+						
+						// 현재 신고 수 가져오기
 						const currentCount = parseInt(localStorage.getItem(reportKey)) || 0;
-
-						// 신고 수 1 증가하고 newCount로 재정의의
+						
+						// 신고 수 1 증가
 						const newCount = currentCount + 1;
-
-						// 증가된 신고 수를 localStorage에 다시 저장
-						// (reportCount_post_1,2)
+						
+						// 신고 수 저장
 						localStorage.setItem(reportKey, newCount);
-
+						
+						// 사용자별 신고 기록 저장 (신고 시간 포함)
+						const reportData = {
+							userId: loggedInUserId,
+							postId: postId,
+							timestamp: new Date().toISOString(),
+							reportCount: newCount
+						};
+						localStorage.setItem(userReportKey, JSON.stringify(reportData));
+						
 						// 사용자에게 신고 완료 및 신고 수 표시
 						alert(`게시글을 신고했습니다. 현재 신고 수: ${newCount}`);
+					});
+
+					// 댓글 삭제 기능
+					$(document).on('click', '.delete-comment-btn', function() {
+						const commentIndex = parseInt($(this).data('index'));
+						const comments = JSON.parse(localStorage.getItem(`comments_${postId}`)) || [];
+						
+						// 현재 로그인한 사용자 확인
+						const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+						const loggedInUserId = loggedInUser ? loggedInUser.id : null;
+						
+						// 댓글 작성자 확인
+						const comment = comments[commentIndex];
+						if (!comment || comment.userId !== loggedInUserId) {
+							alert('삭제 권한이 없습니다.');
+							return;
+						}
+						
+						// 삭제 확인
+						if (!confirm('댓글을 삭제하시겠습니까?')) {
+							return;
+						}
+						
+						// 댓글 삭제
+						comments.splice(commentIndex, 1);
+						localStorage.setItem(`comments_${postId}`, JSON.stringify(comments));
+						
+						// 화면에서 댓글 제거
+						$(this).closest('.comment').remove();
+						
+						// 삭제 후 인덱스 재정렬
+						$('.comment').each(function(index) {
+							$(this).attr('data-index', index);
+							$(this).find('.delete-comment-btn').attr('data-index', index);
+						});
+						
+						alert('댓글이 삭제되었습니다.');
 					});
 				} else {
 					// 유효하지 않은 postId일 경우

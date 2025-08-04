@@ -257,12 +257,15 @@
 				const tbody2 = $('.table-container').eq(1).find('tbody');
 				tbody2.empty();
 
-				if (fundingList.length === 0) {
+				// 현재 로그인한 사용자의 펀딩신청정보만 필터링
+				const userFundingList = fundingList.filter(funding => funding.id === userId);
+
+				if (userFundingList.length === 0) {
 					tbody2.append(
 						`<tr><td colspan="3" style="text-align:center;">펀딩신청이 없습니다.</td></tr>`,
 					);
 				} else {
-					fundingList.forEach((funding) => {
+					userFundingList.forEach((funding) => {
 						const row = `
 							<tr>
 								<td>${funding.applyDate}</td>

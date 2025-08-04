@@ -58,6 +58,17 @@
 				font-weight: bold;
 				color: white;
 			}
+			
+			/* 승인/거부 상태 색상 스타일 */
+			.status.approved {
+				color: #28a745;
+				font-weight: bold;
+			}
+			
+			.status.rejected {
+				color: #dc3545;
+				font-weight: bold;
+			}
 			input[type='checkbox'] {
 				transform: scale(1.2);
 			}
@@ -211,13 +222,14 @@
 
 				finalProjectData.forEach((project, index) => {
 					const row = document.createElement('tr');
+					const statusClass = project.status === '승인' ? 'approved' : project.status === '거부' ? 'rejected' : '';
 					row.innerHTML = `
 			<td><input type="checkbox" class="select-checkbox" data-index="${index}" /></td>
 			<td>${project.projectName}</td> <!-- 상품명 -->
 			<td>${project.id}</td> <!-- 회원id -->
 			<td>${project.applyDate}</td> <!-- 작성일자 -->
 			<td>${project.projectCategory}</td> <!-- 카테고리 -->
-			<td class="status">${project.status || '대기'}</td> <!-- 기본 상태: 대기 -->
+			<td class="status ${statusClass}">${project.status || '대기'}</td> <!-- 기본 상태: 대기 -->
 		`;
 					tbody.appendChild(row);
 				});

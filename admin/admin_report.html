@@ -196,7 +196,8 @@
 				tbody.innerHTML = '';
 
 				posts.forEach((post, index) => {
-					const reportCount = localStorage.getItem(`reportCount_post_${index}`) || 0;
+					// postId를 사용하여 신고 횟수 가져오기
+					const reportCount = localStorage.getItem(`reportCount_post_${post.postId}`) || 0;
 
 					const row = document.createElement('tr');
 					row.innerHTML = `
@@ -228,8 +229,20 @@
 					const index = parseInt(e.target.dataset.index);
 					if (!isNaN(index)) {
 						if (confirm('해당 게시글을 삭제하시겠습니까?')) {
+							const postToDelete = posts[index];
 							posts.splice(index, 1);
-							localStorage.removeItem(`reportCount_post_${index}`);
+							
+							// 관련 신고 기록 삭제
+							localStorage.removeItem(`reportCount_post_${postToDelete.postId}`);
+							
+							// 사용자별 신고 기록도 삭제
+							const keys = Object.keys(localStorage);
+							keys.forEach(key => {
+								if (key.startsWith('userReport_') && key.includes(`_post_${postToDelete.postId}`)) {
+									localStorage.removeItem(key);
+								}
+							});
+							
 							updateLocalStorageAndReports();
 						}
 					}
@@ -247,8 +260,19 @@
 
 				const indexes = checked.map((cb) => parseInt(cb.dataset.index)).sort((a, b) => b - a);
 				indexes.forEach((i) => {
+					const postToDelete = posts[i];
 					posts.splice(i, 1);
-					localStorage.removeItem(`reportCount_post_${i}`);
+					
+					// 관련 신고 기록 삭제
+					localStorage.removeItem(`reportCount_post_${postToDelete.postId}`);
+					
+					// 사용자별 신고 기록도 삭제
+					const keys = Object.keys(localStorage);
+					keys.forEach(key => {
+						if (key.startsWith('userReport_') && key.includes(`_post_${postToDelete.postId}`)) {
+							localStorage.removeItem(key);
+						}
+					});
 				});
 				updateLocalStorageAndReports();
 			});
@@ -256,10 +280,7 @@
 			// ✅ localStorage 갱신 및 신고 키 재정렬
 			function updateLocalStorageAndReports() {
 				localStorage.setItem('posts', JSON.stringify(posts));
-				// 신고 횟수 재정렬
-				const keys = Object.keys(localStorage).filter((k) => k.startsWith('reportCount_post_'));
-				keys.forEach((k) => localStorage.removeItem(k));
-				posts.forEach((_, i) => localStorage.setItem(`reportCount_post_${i}`, 0)); // 기본값 0
+				// 신고 횟수는 postId 기반으로 관리되므로 별도 재정렬 불필요
 				renderPosts();
 			}
 		</script>

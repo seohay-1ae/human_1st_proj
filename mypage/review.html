@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>review</title>
+		<style>
+			/* write.css */
+
+			/* 전체 레이아웃 설정 */
+			body {
+				background-color: #f4f4f4;
+			}
+
+			/* 컨테이너 스타일링 */
+			.wrapper {
+				background-color: #ffffff;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			}
+
+			/* 제목 스타일링 */
+			h2 {
+				margin-top: 0;
+				color: #333;
+			}
+
+			/* 제목, 내용, 사진 첨부 */
+			label {
+				display: block;
+				margin-top: 20px;
+				margin-bottom: 5px;
+				font-weight: bold;
+			}
+
+			input[type='text'],
+			textarea,
+			input[type='file'] {
+				width: 95%;
+				padding: 10px;
+				border: 1px solid #cccccc;
+				border-radius: 6px;
+				font-size: 16px;
+			}
+
+			textarea {
+				resize: vertical;
+				height: 200px;
+			}
+
+			/* 등록 버튼 스타일링 */
+			.btn-submit {
+				background-color: transparent; /* 배경 투명 */
+				border: 1px solid #007bff; /* 파란 테두리 */
+				border-radius: 6px; /* 둥근 모서리 */
+				padding: 8px 16px; /* 버튼 내부 여백 */
+				color: #007bff; /* 글자 색상 */
+				font-size: 12.8px; /* 글자 크기 */
+				text-decoration: none; /* 링크 밑줄 제거 */
+				display: inline-block; /* 버튼처럼 보이도록 */
+				cursor: pointer; /* 마우스 커서 포인터로 변경 */
+
+				display: block; /* margin-left: auto가 동작하도록 block 설정 */
+			}
+			.btn-submit:hover {
+				background-color: #007bff; /* 호버 시 배경색 변경 */
+				color: white; /* 호버 시 글자색 변경 */
+			}
+			/* 팝업창 스타일 */
+			.popup {
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background-color: white;
+				padding: 25px 30px;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+				border-radius: 10px;
+				text-align: center;
+			}
+
+			.popup p {
+				margin-bottom: 20px;
+				font-size: 16px;
+				color: #333333;
+			}
+
+			.popup button {
+				background-color: #000000;
+				color: white;
+				border: none;
+				padding: 10px 20px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: bold;
+			}
+
+			.buttons {
+				display: flex;
+				align-items: center;
+			}
+			/* 오버레이 스타일 */
+			.overlay {
+				display: none;
+				position: fixed; /* position: relative에서 fixed로 수정 */
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.4);
+			}
+			@media (min-width: 1024px) {
+				.wrapper {
+					width: 920px;
+					padding: 20px;
+					margin: auto;
+				}
+				.buttons {
+					margin: 30px 0 10px 0;
+					gap: 755px !important;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.wrapper {
+					width: 560px;
+					padding: 20px;
+					margin: auto;
+				}
+				.buttons {
+					margin: 30px 0 10px 0;
+					gap: 420px !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+				<div class="container">
+					<div class="wrapper">
+						<h2>후기작성</h2>
+						<p><strong>날짜:</strong> <span id="date"></span></p>
+						<p><strong>상품 이름:</strong> <span id="product"></span></p>
+						<p><strong>총 금액:</strong> <span id="amount"></span></p>
+
+						<form id="writeForm">
+							<label for="title">제목</label>
+							<input type="text" id="title" name="title" required />
+							<label for="content">내용</label>
+							<textarea
+								id="content"
+								name="content"
+								placeholder="후기를 작성하세요"
+								required
+							></textarea>
+							<label for="image">사진 첨부</label>
+							<input type="file" id="image" name="image" accept="image/*" />
+							<div class="buttons">
+								<button type="button" onclick="location.href='./mypage.html'">돌아가기</button>
+								<button type="submit" class="btn-submit">등록</button>
+							</div>
+						</form>
+					</div>
+					<div class="overlay" id="overlay"></div>
+					<div class="popup" id="popup">
+						<p><strong>후기가 등록되었습니다!</strong></p>
+						<button onclick="goToMyPage()">확인</button>
+					</div>
+				</div>
+			</main>
+		</div>
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script>
+			$(document).ready(function () {
+				const urlParams = new URLSearchParams(window.location.search);
+				const date = urlParams.get('date');
+				const product = decodeURIComponent(urlParams.get('product'));
+				const amount = decodeURIComponent(urlParams.get('amount'));
+				const productId = urlParams.get('productId');
+				const orderId = urlParams.get('orderId'); // ✅ orderId 추가
+
+				// 날짜, 상품, 금액 정보 표시
+				if (date && product && amount) {
+					$('#date').text(date);
+					$('#product').text(product);
+					$('#amount').text(amount + '원');
+				}
+
+				// 폼 제출 이벤트 처리
+				$('#writeForm').on('submit', function (event) {
+					event.preventDefault();
+
+					if (!productId || !orderId) {
+						alert('상품 ID 또는 주문 ID 정보가 없습니다.');
+						return;
+					}
+
+					const title = $('#title').val().trim();
+					const content = $('#content').val().trim();
+
+					if (!title || !content) {
+						alert('제목과 내용을 모두 입력해주세요.');
+						return;
+					}
+
+					// 현재 날짜시각 가져오기
+					const currentDate = new Date().toLocaleString(); // 현재 날짜시각 (로컬 형식)
+
+					const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+					const loggedInUserId = loggedInUser ? loggedInUser.id : null;
+
+					if (!loggedInUserId) {
+						alert('로그인 정보가 없습니다.');
+						return;
+					}
+
+					// 새 리뷰 객체 생성 (현재 날짜시각과 loggedInUser.id 추가)
+					const newReview = {
+						title,
+						content,
+						date: currentDate, // 현재 날짜시각 추가
+						userId: loggedInUserId, // 작성자의 유저 ID 추가
+					};
+
+					// 기존 리뷰 불러오기 및 저장 (상품 기준)
+					const reviewKey = 'reviews_' + productId;
+					const reviews = JSON.parse(localStorage.getItem(reviewKey)) || [];
+					reviews.push(newReview);
+					localStorage.setItem(reviewKey, JSON.stringify(reviews));
+
+					// ✅ 후기 작성 여부는 orderId 기준
+					const reviewWrittenKey = `reviewWritten_${orderId}`;
+					localStorage.setItem(reviewWrittenKey, true);
+
+					// 팝업 표시
+					$('#popup').show();
+					$('#overlay').show();
+				});
+			});
+
+			// 마이페이지로 이동
+			function goToMyPage() {
+				window.location.href = './mypage.html';
+			}
+		</script>
+	</body>
+</html>

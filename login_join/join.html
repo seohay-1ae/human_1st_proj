@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>회원가입</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background-color: #f9f9f9;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+			.signup-container {
+				background-color: #ffffff;
+				padding: 30px;
+				border-radius: 10px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+				width: 100%;
+				max-width: 400px;
+				box-sizing: border-box;
+			}
+			/* 회원가입 큰 글씨 */
+			.signup-container h2 {
+				text-align: center;
+				margin-bottom: 20px;
+				font-size: 22px;
+			}
+			/* 아이디, 이메일, 비번, 확인, 이름 감싸는 컨테이너*/
+			.signup-container input {
+				width: 100%;
+				padding: 10px 12px;
+				margin: 8px 0;
+				border: 1px solid #cccccc;
+				border-radius: 6px;
+				font-size: 14px;
+				box-sizing: border-box;
+			}
+			.signup-container button {
+				width: 100%;
+				background-color: #000000;
+				color: white;
+				border: none;
+				padding: 10px;
+				border-radius: 6px;
+				font-size: 15px;
+				margin-top: 12px;
+				cursor: pointer;
+			}
+			/* 팝업 스타일 */
+			.popup {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: white;
+				border-radius: 10px;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+				padding: 20px;
+				display: none;
+				width: 300px;
+				text-align: center;
+			}
+			.popup p {
+				margin-bottom: 20px;
+			}
+			/* 팝업 버튼 */
+			.popup button {
+				background-color: #000000;
+				color: white;
+				border: none;
+				padding: 8px 20px;
+				border-radius: 6px;
+				cursor: pointer;
+			}
+			/* 제출누르면 주변이 회색으로 변하는 효과 */
+			.overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.3);
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 메인화면 -->
+		<div class="signup-container">
+			<h2>회원가입</h2>
+			<form id="signupForm">
+				<input type="text" id="userid" placeholder="아이디" required />
+				<input type="tel" id="telnum" placeholder="휴대폰 번호 ( - 빼고 입력해주세요)" required />
+				<input type="password" id="pw" placeholder="비밀번호" required />
+				<input type="password" id="pw-confirm" placeholder="비밀번호 확인" required />
+				<input type="text" id="user-name" placeholder="이름" required />
+				<button type="submit">가입하기</button>
+			</form>
+		</div>
+
+		<!-- 팝업창 -->
+		<div class="overlay" id="overlay"></div>
+		<div class="popup" id="popup">
+			<p id="popupMessage">팝업 메시지</p>
+			<button id="confirmBtn">확인</button>
+		</div>
+
+		<script>
+			const form = document.getElementById('signupForm');
+			const popup = document.getElementById('popup');
+			const overlay = document.getElementById('overlay');
+			const popupMessage = document.getElementById('popupMessage');
+			const confirmBtn = document.getElementById('confirmBtn');
+
+			form.addEventListener('submit', function (e) {
+				e.preventDefault();
+
+				//저장할 데이터 객체로 생성
+				const id = document.getElementById('userid').value.trim();
+				const tel = document.getElementById('telnum').value.trim();
+				const password = document.getElementById('pw').value;
+				const confirm = document.getElementById('pw-confirm').value;
+				const name = document.getElementById('user-name').value.trim();
+
+				// 유효성 검사
+				if (password !== confirm) {
+					showPopup('비밀번호가 일치하지 않습니다.');
+					return;
+				}
+
+				const users = JSON.parse(localStorage.getItem('userList')) || [];
+
+				// 아이디 중복 검사
+				const duplicate = users.find((user) => user.id === id);
+				if (duplicate) {
+					showPopup('이미 존재하는 아이디입니다.');
+
+					// 아이디 중복이면 입력 초기화
+					form.reset();
+					return;
+				}
+
+				// 유저 등록
+				//newUser에 id, tel, password, name을 저장하는데, 새로 가입할때마다 newUser 데이터가 덮어씌워지는 문제가 있음
+				const newUser = { id, tel, password, name };
+				//users를 따로 만들어서(위에서 const users를 했음) user에 newUser를 push(users는 배열임)
+				users.push(newUser);
+				//로컬스토리지에 userList라는 이름으로 users배열을 저장
+				localStorage.setItem('userList', JSON.stringify(users));
+
+				showPopup(`${name}님 반갑습니다!<br>회원가입이 완료되었습니다.`, true);
+			});
+
+			// 팝업 열기
+			function showPopup(message, success = false) {
+				popupMessage.innerHTML = message;
+				popup.style.display = 'block';
+				overlay.style.display = 'block';
+
+				// 성공 시 버튼 누르면 로그인 페이지로 이동
+				confirmBtn.onclick = function () {
+					popup.style.display = 'none';
+					overlay.style.display = 'none';
+					if (success) {
+						window.location.href = './login.html';
+					}
+				};
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>프로젝트 후원하기</title>
+		<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<style>
+			/* 기존 스타일 유지 */
+			.wrapper {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+			}
+			.container {
+				flex: 2;
+			}
+			.container_1 {
+				flex: 1;
+				margin-top: 778px;
+			}
+			.section {
+				margin-bottom: 50px;
+			}
+			.section-title {
+				font-size: 18px;
+				font-weight: bold;
+				margin-bottom: 10px;
+				border-bottom: 2px solid #eee;
+				padding-bottom: 5px;
+			}
+			.product-image {
+				width: 100%;
+				height: auto;
+				border-radius: 8px;
+				margin-bottom: 10px;
+			}
+			.info-text {
+				margin: 5px 0;
+			}
+			p {
+				font-size: 1rem;
+			}
+			input,
+			textarea {
+				padding: 10px;
+				margin-top: 8px;
+				border: 1px solid #ccc;
+				border-radius: 6px;
+				font-size: 14px;
+			}
+			.checkbox-group {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 10px;
+			}
+
+			.checkbox-group label {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 14px;
+			}
+			#postcode {
+				width: 70%;
+			}
+			#address {
+				width: 70%;
+			}
+			@media (min-width: 1024px) {
+				.wrapper {
+					box-sizing: content-box;
+					width: 1150px;
+				}
+				.container {
+					box-sizing: content-box;
+					width: 500px;
+					padding: 0 100px 0 160px;
+				}
+				.container_1 {
+					box-sizing: content-box;
+					margin-top: 800px;
+				}
+				.section1 {
+					height: 450px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.wrapper {
+					box-sizing: content-box;
+					width: 650px;
+				}
+				.container {
+					box-sizing: content-box;
+					width: 500px;
+					padding: 10px 30px 30px 80px;
+				}
+				.container_1 {
+					box-sizing: content-box;
+					width: 400px;
+					margin-top: 568px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="wrapper">
+					<div class="container">
+						<!-- 상품 요약 -->
+						<div class="section">
+							<div class="section-title">상품 요약</div>
+							<img id="productImage" src="" alt="선택한 상품 이미지" class="product-image" />
+							<div class="info-text"><strong>상품명:</strong> <span id="productTitle"></span></div>
+						</div>
+
+						<!-- 상품 구성 정보 -->
+						<div class="section">
+							<div class="section-title">상품 구성 정보</div>
+							<p id="productOption"></p>
+							<p id="startDeliveryDate"></p>
+							<p id="dueDeliveryDate"></p>
+							<p id="productPrice"></p>
+						</div>
+
+						<!-- 후원자 정보 -->
+						<div class="section">
+							<div class="section-title">후원자 정보</div>
+							<p id="supporterName"></p>
+							<p id="supporterPhone"></p>
+						</div>
+
+						<!-- 배송지 -->
+						<div class="section">
+							<div class="section-title">배송지</div>
+							<input type="text" id="postcode" placeholder="우편번호" readonly /><br />
+							<input type="text" id="address" placeholder="배송지 주소 입력" readonly /><br />
+							<button type="button" style="margin-top: 15px" onclick="execDaumPostcode()">
+								주소 검색
+							</button>
+						</div>
+
+						<!-- 결제 수단 -->
+						<div class="section">
+							<div class="section-title">결제 수단</div>
+							<div class="checkbox-group">
+								<label><input type="radio" name="pay" checked /> 카드/간편결제</label>
+								<label><input type="radio" name="pay" /> 계좌이체</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="container_1">
+						<!-- 최종 후원 금액 -->
+						<div class="section1">
+							<div class="section-title">최종 후원 금액</div>
+							<p id="finalAmountDisplay" style="margin-bottom: 10px"></p>
+							<div class="checkbox-group">
+								<label><input type="checkbox" /> 개인정보 제 3자 동의</label>
+							</div>
+							<button style="margin-top: 15px" onclick="submitSupport()">후원하기</button>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 푸터 -->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+
+		<!-- Daum 주소 검색 -->
+		<script>
+			function execDaumPostcode() {
+				new daum.Postcode({
+					oncomplete: function (data) {
+						const addr = data.roadAddress ? data.roadAddress : data.jibunAddress;
+						document.getElementById('postcode').value = data.zonecode;
+						document.getElementById('address').value = addr;
+					},
+				}).open();
+			}
+
+			window.addEventListener('DOMContentLoaded', () => {
+				const data = JSON.parse(localStorage.getItem('selectedProduct')) || {};
+				const supporter = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+
+				const name = supporter.name || '미입력';
+				const phone = supporter.tel
+					? supporter.tel.replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3')
+					: '미입력';
+
+				// 이미지
+				document.getElementById('productImage').src = data.image || '';
+				// 상품명
+				document.getElementById('productTitle').textContent = data.title || '';
+				// 옵션
+				document.getElementById('productOption').textContent =
+					`상품 옵션: ${data.selectedOption || ''}`;
+				// 출고일 & 배송일
+				if (data.estimatedDate) {
+					const startDate = new Date(data.estimatedDate);
+					const dueDate = new Date(startDate);
+					dueDate.setDate(dueDate.getDate() + 2);
+
+					const format = (d) => d.toISOString().slice(0, 10);
+
+					document.getElementById('startDeliveryDate').textContent =
+						`예상 출고일: ${format(startDate)}`;
+					document.getElementById('dueDeliveryDate').textContent =
+						`예상 배송일: ${format(dueDate)}`;
+				}
+				// 가격
+				document.getElementById('productPrice').textContent = `상품 가격: ${data.price || ''}원`;
+
+				// 후원자 정보
+				document.getElementById('supporterName').textContent = `이름: ${name}`;
+				document.getElementById('supporterPhone').textContent = `연락처: ${phone}`;
+
+				// 최종 후원 금액
+				document.getElementById('finalAmountDisplay').textContent =
+					`최종 후원 금액: ${data.price?.replace(/,/g, '') || ''}원`;
+			});
+			function submitSupport() {
+				const agree = document.querySelector('.checkbox-group input[type="checkbox"]');
+				if (!agree.checked) {
+					alert('개인정보 제 3자 제공에 동의하셔야 후원이 가능합니다.');
+					agree.focus();
+					return;
+				}
+
+				const supporter = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+				// ✅ 로그인 여부 확인
+				if (!supporter.id) {
+					alert('로그인 후 이용 가능합니다.');
+					return;
+				}
+
+				const product = JSON.parse(localStorage.getItem('selectedProduct')) || {};
+				const postcode = document.getElementById('postcode').value;
+				const address = document.getElementById('address').value;
+				// ✅ 배송지 필수 입력 체크
+				if (!postcode || !address) {
+					alert('배송지를 입력해 주세요.');
+					return;
+				}
+
+				const paymentMethod = document
+					.querySelector('input[name="pay"]:checked')
+					?.parentElement?.textContent.trim();
+				const today = new Date();
+				today.setHours(today.getHours() + 9); // UTC 기준 시간에 9시간 더해서 한국 시간으로 변환
+				const formattedDate = today.toISOString().split('T')[0]; // 날짜 부분만 추출 (yyyy-mm-dd)
+				const finalAmount = product.price?.replace(/,/g, '');
+
+				const supportData = {
+					supporter, //유저정보
+					product,
+					productId: product.productId, // productId를 포함
+					postcode,
+					address,
+					paymentMethod,
+					supportDate: formattedDate,
+					finalAmount,
+					reviewWritten: false, // ✅ 이 줄 추가!
+				};
+
+				// 🔥 유저 ID별로 저장 (누적)
+				const userId = supporter.id;
+				const history = JSON.parse(localStorage.getItem('supportHistory')) || {};
+				if (!history[userId]) {
+					history[userId] = [];
+				}
+				history[userId].push(supportData);
+				localStorage.setItem('supportHistory', JSON.stringify(history));
+
+				alert('후원이 완료되었습니다!');
+				window.location.href = '../mypage/mypage.html';
+			}
+		</script>
+	</body>
+</html>

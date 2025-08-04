@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>펀딩 등록 신청</title>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+			.main-wrapper {
+				display: flex;
+				flex-direction: column;
+			}
+			.container {
+				width: 90%;
+				margin: 0;
+				background: #ffffff;
+				padding: 20px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+				border-radius: 10px;
+			}
+			.header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 20px;
+			}
+			.header h3 {
+				margin: 0;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				text-align: center;
+			}
+			th,
+			td {
+				border: 1px solid #ccc;
+				padding: 8px;
+				white-space: nowrap; /* 텍스트는 한 줄로 유지 */
+				overflow: hidden; /* 넘친 내용은 숨김 */
+				text-overflow: ellipsis; /* 넘친 부분은 "..."으로 표시 */
+			}
+			th {
+				background-color: #f1c40f;
+				color: #000;
+			}
+			.btn-approve {
+				background-color: red;
+				border: none;
+				padding: 5px 10px;
+				cursor: pointer;
+				font-weight: bold;
+				color: white;
+			}
+			input[type='checkbox'] {
+				transform: scale(1.2);
+			}
+			@media (max-width: 750px) {
+				table {
+					font-size: 14px;
+				}
+			}
+			@media (max-width: 750px) {
+				.main-wrapper {
+					margin-left: 0; /* 모바일에서는 사이드바 밀리지 않도록 설정 */
+				}
+			}
+
+			@media (max-width: 1023px) and (min-width: 750px) {
+				.container {
+					width: 500px;
+					margin: auto;
+					margin-top: 120px;
+				}
+				.col-1 {
+					width: 4.5%;
+				}
+				.col-2 {
+					width: 16%;
+				}
+				.col-3 {
+					width: 9%;
+				}
+				.col-4 {
+					width: 13%;
+				}
+				.col-5 {
+					width: 10%;
+				}
+				.col-6 {
+					width: 6%;
+				}
+				.table-container {
+					overflow-x: scroll;
+				}
+			}
+
+			@media (min-width: 1024px) {
+				.container {
+					margin: auto;
+					margin-top: 120px;
+					width: 980px;
+				}
+				.col-1 {
+					width: 3%;
+				}
+				.col-2 {
+					width: 22%;
+				}
+				.col-3 {
+					width: 9%;
+				}
+				.col-4 {
+					width: 8%;
+				}
+				.col-5 {
+					width: 8%;
+				}
+				.col-6 {
+					width: 5%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="main-wrapper">
+			<!-- 사이드바 삽입 -->
+			<div id="sidebar-container"></div>
+
+			<!-- 첫 번째 컨테이너 -->
+			<div class="container">
+				<div class="header">
+					<h3>펀딩 신청 내역</h3>
+				</div>
+				<div class="table-container">
+					<table>
+						<colgroup>
+							<!-- 첫 번째 열 (체크박스) -->
+							<col class="col-1" />
+							<!-- 두 번째 열 (상품) -->
+							<col class="col-2" />
+							<!-- 세 번째 열 (회원id) -->
+							<col class="col-3" />
+							<!-- 네 번째 열 (작성일자) -->
+							<col class="col-4" />
+							<!-- 다섯 번째 열 (카테고리) -->
+							<col class="col-5" />
+							<!-- 여섯 번째 열 (관리) -->
+							<col class="col-6" />
+						</colgroup>
+						<thead>
+							<tr>
+								<th><input type="checkbox" id="select-all" /></th>
+								<!-- ✅ 변경 -->
+								<th>상품</th>
+								<th>회원id</th>
+								<th>작성일자</th>
+								<th>카테고리</th>
+								<th>관리</th>
+							</tr>
+						</thead>
+						<tbody id="post-list">
+							<!-- 게시물 목록은 JavaScript로 동적으로 추가됩니다 -->
+						</tbody>
+					</table>
+				</div>
+				<button
+					id="approve-selected"
+					style="
+						margin-top: 10px;
+						background-color: #28a745;
+						color: white;
+						padding: 10px 15px;
+						border: none;
+						border-radius: 5px;
+						cursor: pointer;
+					"
+				>
+					선택 승인
+				</button>
+				<button
+					id="reject-selected"
+					style="
+						margin-top: 10px;
+						background-color: #dc3545;
+						color: white;
+						padding: 10px 15px;
+						border: none;
+						border-radius: 5px;
+						cursor: pointer;
+					"
+				>
+					선택 거부
+				</button>
+			</div>
+		</main>
+		<script src="./admin_sidebar.js"></script>
+		<script>
+			// 로컬스토리지에서 final_project_data를 가져옴
+			let finalProjectData = JSON.parse(localStorage.getItem('final_project_data')) || [];
+
+			function renderPosts() {
+				const tbody = document.getElementById('post-list');
+				tbody.innerHTML = '';
+
+				finalProjectData.forEach((project, index) => {
+					const row = document.createElement('tr');
+					row.innerHTML = `
+			<td><input type="checkbox" class="select-checkbox" data-index="${index}" /></td>
+			<td>${project.projectName}</td> <!-- 상품명 -->
+			<td>${project.id}</td> <!-- 회원id -->
+			<td>${project.applyDate}</td> <!-- 작성일자 -->
+			<td>${project.projectCategory}</td> <!-- 카테고리 -->
+			<td class="status">${project.status || '대기'}</td> <!-- 기본 상태: 대기 -->
+		`;
+					tbody.appendChild(row);
+				});
+			}
+
+			// 로드 후 렌더링
+			renderPosts();
+
+			// 전체 선택
+			document.addEventListener('change', (e) => {
+				if (e.target.id === 'select-all') {
+					const checked = e.target.checked;
+					document.querySelectorAll('.select-checkbox').forEach((cb) => (cb.checked = checked));
+				}
+			});
+
+			// 선택 승인 버튼
+			document.getElementById('approve-selected').addEventListener('click', () => {
+				const checked = Array.from(document.querySelectorAll('.select-checkbox:checked'));
+				if (checked.length === 0) {
+					alert('승인할 게시글을 선택해주세요.');
+					return;
+				}
+				checked.forEach((cb) => {
+					const index = parseInt(cb.dataset.index);
+					if (!isNaN(index)) {
+						finalProjectData[index].status = '승인';
+					}
+				});
+				updateLocalStorageAndRender();
+			});
+
+			// 선택 거부 버튼
+			document.getElementById('reject-selected').addEventListener('click', () => {
+				const checked = Array.from(document.querySelectorAll('.select-checkbox:checked'));
+				if (checked.length === 0) {
+					alert('거부할 게시글을 선택해주세요.');
+					return;
+				}
+				checked.forEach((cb) => {
+					const index = parseInt(cb.dataset.index);
+					if (!isNaN(index)) {
+						finalProjectData[index].status = '거부';
+					}
+				});
+				updateLocalStorageAndRender();
+			});
+
+			// 로컬스토리지 갱신 및 화면 렌더링
+			function updateLocalStorageAndRender() {
+				localStorage.setItem('final_project_data', JSON.stringify(finalProjectData));
+				renderPosts();
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>brandstory</title>
+		<style>
+			/* 전체 레이아웃 설정 */
+			body {
+				color: #333; /* 기본 글자 색상 */
+			}
+
+			/* 상단 이미지 스타일링 */
+			img {
+				display: block; /* 이미지를 블록 요소로 설정하여 중앙 정렬 가능 */
+				max-width: 100%; /* 반응형을 위해 최대 너비 100% */
+			}
+
+			/* 섹션 스타일링 */
+			section {
+				gap: 80px; /* 제목과 내용 간 간격 */
+
+				margin-left: auto; /* 가운데 정렬 */
+				margin-right: auto;
+			}
+
+			/* 오른쪽 내용 영역 */
+			section > p,
+			section > article {
+				flex: 0 0 70%; /* 너비 70% 고정 */
+				margin: 0;
+			}
+
+			/* 내용 텍스트 스타일 */
+			section p {
+				line-height: 1.6; /* 줄 간격 */
+				margin-bottom: 15px; /* 단락 간 간격 */
+			}
+
+			/* article 스타일링 (브랜드 가치와 철학 섹션) */
+			article {
+				margin-bottom: 20px; /* 각 article 간 간격 */
+			}
+
+			/* article 제목 스타일 */
+			article h2 {
+				font-size: 25px;
+				font-weight: bold;
+				color: #333;
+				margin-bottom: 10px;
+			}
+
+			article p {
+				font-weight: normal;
+			}
+
+			/* SIDEMENU 강조 스타일 */
+			.strong {
+				font-weight: bold;
+				color: #007bff; /* 강조 색상 (파란색) */
+			}
+			@media (min-width: 1024px) {
+				#banner {
+					width: 100%;
+					margin-top: 0;
+					height: 350px;
+				}
+				/* 섹션 스타일링 */
+				section {
+					display: flex;
+					gap: 40px;
+					margin: 60px 0;
+				}
+
+				section > h3 {
+					flex: 0 0 25%;
+				}
+
+				section > .content {
+					flex: 0 0 70%;
+					display: flex;
+					flex-wrap: wrap;
+					gap: 20px;
+				}
+
+				.content p {
+					flex: 0 0 100%; /* 첫 문단은 전체 너비 */
+					margin-bottom: 20px;
+				}
+
+				.content article {
+					flex: 0 0 100%;
+					box-sizing: border-box;
+				}
+			}
+
+			@media (min-width: 750px) and (max-width: 1023px) {
+				#banner {
+					width: 100%;
+					margin-top: 0;
+					height: 300px;
+				}
+				/* 섹션 스타일링 */
+				section {
+					margin: 60px 0; /* 섹션 간 상하 여백 40px, 좌우 여백 20px */
+				}
+				h3 {
+					margin-bottom: 30px;
+				}
+				/* article 제목 스타일 */
+				article h2 {
+					font-size: 35px;
+					font-weight: bold;
+					color: #333;
+					margin-bottom: 10px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<img src="../resources/brandstory.jpg" alt="브랜드스토리 이미지" id="banner" />
+				<div class="container">
+					<section>
+						<h3>창립 배경과 동기</h3>
+						<div class="content">
+							<p>
+								스마트팜 농업은 혁신의 가능성을 열었지만, 현실은 녹록지 않았습니다. 열정과 기술을
+								가진 젊은 농부들은 초기 자금 부족으로 스마트팜 설비를 도입하거나 사업을 확장하기
+								어려웠습니다. 반면, 지속 가능한 농업에 투자하고 싶은 도시의 후원자들은 농가를 직접
+								지원할 수 있는 신뢰할 만한 창구를 찾지 못하고 있었습니다. 이 간극은 농업의 발전을
+								가로막는 큰 장벽이었습니다.
+							</p>
+							<p>
+								<strong class="strong">SIDEMENU</strong>는 이 문제를 해결하기 위해 탄생했습니다.
+								우리는 농민과 투자자를 연결하는 크라우드펀딩 플랫폼을 통해 자금 문제를 해소하고,
+								스마트팜 기술의 확산을 가속화하고자 했습니다. 농가에는 안정적인 성장 기반을,
+								투자자에게는 투명한 참여 기회를 제공함으로써, SIDEMENU는 단순한 펀딩을 넘어 농업의
+								새로운 생태계를 만들어갑니다.
+							</p>
+						</div>
+					</section>
+
+					<section>
+						<h3>SIDEMENU <br />브랜드의 가치와 철학</h3>
+						<div class="content">
+							<p>
+								<strong class="strong">SIDEMENU</strong>의 핵심 가치는 상생, 혁신, 그리고 지속
+								가능성입니다.
+							</p>
+
+							<article>
+								<h2>상생</h2>
+								<p>
+									우리는 농민과 투자자가 서로를 믿고 함께 성장하는 생태계를 꿈꿉니다. 농가는
+									안정적인 자금을 얻고, 투자자는 농산물과 성취감이라는 보상을 받습니다.
+								</p>
+							</article>
+
+							<article>
+								<h2>혁신</h2>
+								<p>
+									스마트팜 기술은 농업의 새로운 가능성을 열어줍니다. SIDEMENU는 첨단 기술을 농촌에
+									뿌리내리게 하고, 이를 통해 농업의 경쟁력을 높이는 데 기여합니다.
+								</p>
+							</article>
+
+							<article>
+								<h2>지속 가능성</h2>
+								<p>
+									우리는 단기적인 수익이 아니라, 다음 세대까지 이어질 건강한 농업을 추구합니다.
+									환경을 지키고, 농촌을 활성화하며, 모두가 웃을 수 있는 미래를 만듭니다.
+								</p>
+							</article>
+						</div>
+					</section>
+
+					<section>
+						<h3>미래 비전과 방향성</h3>
+						<div class="content">
+							<p>
+								<strong class="strong">SIDEMENU</strong>는 스마트팜이 농업의 표준이 되는 세상을
+								꿈꿉니다. 농촌이 더 이상 떠나야 할 곳이 아니라, 젊은이들이 돌아와 꿈을 키우는 터전이
+								되길 바랍니다. 우리는 농가와 투자자를 잇는 플랫폼을 넘어, 전 세계 농업 생태계를
+								혁신하는 리더가 되고자 합니다.
+							</p>
+							<p>
+								미래의 <strong class="strong">SIDEMENU</strong>는 더 많은 청년 농부들이 스마트팜으로
+								창업에 도전하고, 투자자들이 그들의 성공을 함께 축하하는 모습을 그립니다. 실시간으로
+								펀딩 현황을 확인하고, 농가의 성과를 공유하며, 스마트팜 기술이 전국, 나아가 전 세계로
+								퍼져가는 플랫폼이 될 것입니다. <strong class="strong">SIDEMENU</strong>는 농업의
+								첨단화와 지속 가능성을 이끌며, 농촌에 활력을 불어넣고, 모두에게 풍요로운 내일을
+								약속합니다.
+							</p>
+						</div>
+					</section>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+	</body>
+</html>

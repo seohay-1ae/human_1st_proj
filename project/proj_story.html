@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>프로젝트 정보</title>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+			/* footer 하단 고정 */
+			.main-wrapper {
+				flex: 1;
+				display: flex;
+				flex-direction: row; /* 사이드바 + 콘텐츠 수평 정렬 */
+				min-height: 100vh;
+			}
+			/* 사이드바 */
+			#sidebar-container {
+				flex-shrink: 0;
+			}
+			h2 {
+				padding: 2rem 1rem;
+			}
+			.input-data label {
+				min-width: 10rem;
+				max-width: 15rem;
+				margin: 0;
+				font-size: 1.5rem;
+			}
+			.input-data input,
+			.input-data select,
+			.input-data textarea {
+				flex: 1; /* 이거 추가! */
+				padding: 8px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				font-size: 1.5rem;
+				box-sizing: border-box; /* 패딩 포함해서 너비 계산 */
+			}
+			.input-data input[type='file'] {
+				padding: 8px;
+			}
+			textarea {
+				width: 100%;
+				padding: 8px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				resize: vertical; /* 사용자가 세로 길이 조절 가능하도록 */
+			}
+			.button-container {
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: nowrap;
+				gap: 10px;
+				width: 100%;
+				margin-top: 20px;
+			}
+			.button {
+				flex: 0 0 auto;
+				width: auto;
+				padding: 0.7rem 3rem;
+				font-size: 1.1rem;
+				text-align: center;
+				border: none;
+				border-radius: 8px;
+				color: #fff;
+				background-color: #0a8b11;
+				text-decoration: none;
+				white-space: nowrap; /* 줄바꿈 방지 */
+				display: inline-block; /* 버튼 영역을 명확히 넓혀줘 */
+				cursor: pointer; /* 마우스 올렸을 때 포인터로 변경 */
+			}
+			.button.prev-button {
+				background-color: #999; /* 이전은 회색톤 */
+			}
+			.button.next-button {
+				background-color: #0a8b11;
+			}
+
+			.input-data > div {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 20px;
+			}
+
+			.required {
+				color: red; /* 빨간색으로 표시 */
+			}
+
+			/* input 태그들의 공통 스타일 */
+			.input-data input {
+				width: 100%;
+				padding: 8px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+			.unit-label {
+				margin-left: 4px;
+				white-space: nowrap; /* 줄바꿈 방지 */
+				flex-shrink: 0; /* '원'이 줄어들지 않도록 설정 */
+			}
+			.input-data .project-story > div {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+			}
+			
+			/* 모바일/태블릿에서는 사이드바 숨김 */
+			@media (max-width: 1023px) {
+				#sidebar-container {
+					display: none;
+				}
+				.button-container {
+					flex-direction: row !important; /* 강제 수평 정렬 */
+					justify-content: space-between;
+					align-items: center;
+					gap: 10px;
+				}
+
+				.button {
+					font-size: 0.9rem;
+					padding: 8px;
+					flex: 1;
+					min-width: 0;
+				}
+			}
+			/* 모바일 */
+			@media (max-width: 750px) {
+				.input-data {
+					flex-direction: column;
+					align-items: stretch;
+				}
+				.input-data > div {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					width: 100%;
+				}
+				.input-data > div > label {
+					margin-bottom: 0;
+					display: inline;
+				}
+				/* 카테고리와 * 표시 한 줄로 묶기 */
+				.input-data .category {
+					display: flex;
+					width: 100%;
+				}
+				.input-data .category span {
+					margin-left: 10px;
+				}
+
+				.button {
+					font-size: 0.9rem;
+					padding: 8px;
+				}
+				h2 {
+					font-size: 1.65rem;
+					padding: 1rem 0.3rem;
+				}
+				.route p {
+					font-size: 0.85rem;
+				}
+			}
+			@media (min-width: 1024px) {
+				.container {
+					padding: 0;
+					width: 970px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					margin: 60px auto auto 68px;
+					padding: 0;
+					width: 600px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="main-wrapper">
+				<!-- 사이드바를 삽입할 위치 -->
+				<div id="sidebar-container"></div>
+					<div class="container">
+						<div class="route">
+							<p>프로젝트 생성 > <span style="color: #0a8b11">프로젝트 스토리</span></p>
+						</div>
+						<div class="now-page">
+							<h2>프로젝트 스토리</h2>
+						</div>
+						<div class="input-data">
+							<div class="product-img">
+								<label for="productImg">썸네일 <span class="required">*</span></label>
+								<input type="file" id="productImg" accept="image/*" required />
+							</div>
+							<div class="project-summary">
+								<label for="projectSummary">프로젝트 요약 <span class="required">*</span></label>
+								<input
+									type="text"
+									id="projectSummary"
+									required
+									placeholder="소개 사진과 함께 보이는 글이에요."
+								/>
+							</div>
+							<div class="project-story">
+								<div>
+									<label for="projectStory">프로젝트 스토리 <span class="required">*</span></label>
+									<textarea id="projectStory" rows="5" required></textarea>
+								</div>
+							</div>
+							<!-- 이전/다음 버튼 추가 -->
+							<div class="button-container">
+								<a href="./proj_info.html" class="button prev-button">이전</a>
+								<a href="#" class="button next-button">다음</a>
+							</div>
+						</div>
+					</div>
+				</div> <!-- 수정된 태그 -->
+		</main>
+		<!-- footer 위치는 여기! -->
+		<footer id="footer"></footer>
+		
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script>
+			// 사이드바 파일을 불러와서 div에 삽입
+			if (window.innerWidth >= 1024) {
+				fetch('sidebar.html')
+					.then((response) => response.text())
+					.then((data) => {
+						document.getElementById('sidebar-container').innerHTML = data;
+
+						// "카테고리" 항목의 글씨 색을 바꾸는 JavaScript 코드
+						const projInfoLink = document.querySelector('.sidebar .proj_story');
+						if (projInfoLink) {
+							projInfoLink.style.color = '#0a8b11'; // 원하는 색상으로 변경
+						}
+					})
+					.catch((error) => console.error('사이드바를 불러오는 데 실패했습니다:', error));
+			}
+
+			//날짜
+			const today = new Date();
+				today.setHours(today.getHours() + 9);
+				const formattedDate = today.toISOString().split('T')[0];
+
+			const startInput = document.getElementById('startDate');
+			const dueInput = document.getElementById('dueDate');
+
+			//필수값 전부 입력해야 넘어가게
+			document.querySelector('.next-button').addEventListener('click', function (e) {
+				e.preventDefault(); // 기본 이동 막기
+
+				const projectSummary = document.getElementById('projectSummary').value.trim();
+				const projectStory = document.getElementById('projectStory').value.trim();
+				const projectImg = document.getElementById('productImg');
+				const file = projectImg.files[0];
+
+				if (!projectSummary || !projectStory || !file) {
+					let missing = [];
+					if (!file) missing.push('썸네일');
+					if (!projectSummary) missing.push('프로젝트 요약');
+					if (!projectStory) missing.push('프로젝트 스토리');
+					alert(`다음 항목을 입력해주세요:\n${missing.join('\n')}`);
+					return;
+				}
+
+				//이미지 파일 형식
+				const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+				if (!allowedTypes.includes(file.type)) {
+					alert('JPG, PNG, WEBP, GIF 형식의 이미지만 업로드 가능합니다.');
+					return;
+				}
+
+				//이미지 처리 및 저장
+				const reader = new FileReader();
+				reader.onload = function () {
+					const base64Image = reader.result;
+
+					const data = {
+						projectSummary,
+						projectStory,
+					};
+
+					localStorage.setItem('projectStory', JSON.stringify(data));
+
+					// 확인용 콘솔 출력 (디버깅용)
+					console.log('저장된 스토리 데이터:', data);
+
+					// 유효성 통과 → 다음 페이지로 이동
+					window.location.href = './proj_reward.html'; // 다음 페이지 경로로 교체
+				};
+
+				reader.readAsDataURL(file);
+			});
+		</script>
+	</body>
+</html>

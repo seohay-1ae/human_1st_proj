@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>달콤한 별빛샤인머스켓</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+			integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+		<style>
+			body {
+				color: #222;
+			}
+
+			.tag-wrapper {
+				text-align: center;
+				margin-bottom: 10px;
+			}
+
+			.tag {
+				display: inline-block;
+				background-color: #2b6653;
+				color: #fff;
+				padding: 5px 17px;
+				border-radius: 10px;
+				font-size: 14px;
+				margin-bottom: 10px;
+			}
+
+			.title {
+				font-size: 30px;
+				font-weight: bold;
+				text-align: center;
+				margin: 10px 0 30px;
+			}
+
+			.top-section {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 20px;
+				justify-content: space-between;
+				align-items: flex-start;
+			}
+
+			.image-box {
+				flex: 1 1 300px;
+				max-width: 600px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.image-box img {
+				width: 100%;
+				max-width: 100%;
+				aspect-ratio: 1 / 1;
+				object-fit: cover;
+				border-radius: 10px;
+			}
+
+			.info-box {
+				flex: 1 1 300px;
+				padding: 10px;
+			}
+
+			.info-box i {
+				margin-right: 6px;
+				color: #f83706c7;
+			}
+
+			.info-box .label {
+				font-size: 16px;
+				margin-top: 10px;
+			}
+
+			.info-box .value {
+				font-size: 20px;
+				font-weight: bold;
+			}
+
+			.divider {
+				border-top: 1px solid #ddd;
+				margin: 16px 0;
+			}
+
+			.label-sub {
+				font-size: 14px;
+				color: #666;
+				margin-top: 8px;
+			}
+
+			.value-sub {
+				font-size: 16px;
+				color: #333;
+				margin-bottom: 4px;
+			}
+
+			.select-box {
+				margin-top: 20px;
+				width: 100%;
+			}
+
+			select {
+				padding: 8px 10px;
+				border-radius: 6px;
+				border: 1px solid #ccc;
+				font-size: 16px;
+				width: 100%;
+			}
+
+			.btn-support {
+				margin-top: 15px;
+				width: 100%;
+				background-color: #2b6653;
+				color: #fff;
+				border: none;
+				padding: 12px;
+				border-radius: 6px;
+				font-size: 16px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+			}
+
+			.btn-support:hover {
+				background-color: #31bd91;
+			}
+
+			.tabs {
+				margin-top: 40px;
+				border-top: 1px solid #ddd;
+				display: flex;
+				padding-top: 20px;
+				gap: 30px;
+				font-weight: bold;
+				cursor: pointer;
+			}
+
+			.tab-content {
+				display: none;
+				margin-top: 20px;
+			}
+
+			.tab-content.active {
+				display: block;
+			}
+			#tab-product {
+				border: solid 1px black;
+				border-radius: 5px;
+				border-bottom: none;
+				padding: 5px;
+			}
+			#tab-review {
+				border: solid 1px black;
+				border-radius: 5px;
+				border-bottom: none;
+				padding: 5px;
+			}
+
+			.tab-content img {
+				width: 100%;
+				max-width: 100%;
+				height: auto;
+				border-radius: 12px;
+			}
+			.review {
+				border: 1px solid #eee;
+				border-radius: 8px;
+				padding: 12px 16px;
+				margin-bottom: 12px;
+				background-color: #f9f9f9;
+			}
+			.review h4 {
+				margin: 0 0 6px;
+				color: #2b6653;
+			}
+			.tabs span.active {
+				background-color: #2b6653;
+				color: white;
+				padding: 5px 10px;
+				border-radius: 6px;
+			}
+			.time-id {
+				font-size: 0.9rem;
+				color: #888;
+				margin-top: 5px;
+			}
+			@media (max-width: 750px) {
+				.top-section {
+					flex-direction: column;
+					align-items: center;
+				}
+
+				.info-box {
+					width: 100%;
+				}
+
+				.image-box {
+					justify-content: center;
+					width: 100%;
+				}
+
+				.select-box select,
+				.btn-support {
+					width: 100%;
+				}
+			}
+
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					width: 600px;
+					margin-bottom: 60px;
+					margin-top: 80px;
+					padding: 0;
+				}
+				.user-review {
+					font-size: 17px !important;
+				}
+			}
+			@media (min-width: 1024px) {
+				.container {
+					width: 1085px;
+					padding: 0;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="container">
+					<div class="tag">과일</div>
+					<div class="title">달콤한 별빛샤인머스켓</div>
+
+					<div class="top-section">
+						<div class="image-box">
+							<img src="../resources/product_detail_thumbnail_musket.png" alt="대표 이미지" />
+						</div>
+
+						<div class="info-box">
+							<div><i class="fa-solid fa-gift"></i><strong>펀딩제품</strong></div>
+							<div class="label">모인금액</div>
+							<div class="value">1,500,000원 <span style="font-size: 16px">150%</span></div>
+							<div class="label">남은시간</div>
+							<div class="value">30일</div>
+							<div class="divider"></div>
+							<div class="label-sub">목표금액</div>
+							<div class="value-sub">1,000,000원</div>
+
+							<div class="label-sub">펀딩기간</div>
+							<div class="value-sub">2025.04.01 ~ 2025.05.15</div>
+
+							<div class="label-sub">결제일자</div>
+							<div class="value-sub">목표금액 달성시 2025.05.15</div>
+
+							<div class="label-sub">예상출고일</div>
+							<div class="value-sub" id="startDelivery">2025.05.20</div>
+
+							<div class="select-box">
+								<select id="productSelect">
+									<option value="" selected disabled>-상품선택-</option>
+									<option value="1">샤인머스켓 2수(400g*2) 9,900원</option>
+									<option value="2">샤인머스켓[상품] 4~5수(2kg) 29,900원</option>
+									<option value="3">샤인머스켓[특품] 2~4수(2kg) 39,900원</option>
+								</select>
+
+								<button class="btn-support" onclick="handleSupport()">후원하기</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="tabs">
+						<span onclick="showTab('detail')" id="tab-product" class="active"
+							>스마트팜/상품 소개</span
+						>
+						<span onclick="showTab('review')" id="tab-review">후기</span>
+					</div>
+
+					<div class="tab-content active" id="detail">
+						<img src="../resources/product_detail_musket1.png" alt="상세 이미지" />
+					</div>
+
+					<div class="tab-content" id="review">
+						<div id="reviewsList"></div>
+						<!-- 여기에 후기들이 표시됩니다. -->
+					</div>
+				</div>
+			</main>
+		</div>
+
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script>
+			//탭 토글
+			function showTab(tabId) {
+				const tabs = document.querySelectorAll('.tab-content');
+				tabs.forEach((tab) => tab.classList.remove('active'));
+				document.getElementById(tabId).classList.add('active');
+
+				const tabButtons = document.querySelectorAll('.tabs span');
+				tabButtons.forEach((btn) => btn.classList.remove('active'));
+
+				// 클릭한 탭에 active 클래스 추가
+				if (tabId === 'detail') {
+					document.getElementById('tab-product').classList.add('active');
+				} else if (tabId === 'review') {
+					document.getElementById('tab-review').classList.add('active');
+				}
+			}
+
+			function handleSupport() {
+				const select = document.getElementById('productSelect');
+				if (select.value === '') {
+					alert('상품을 선택해주세요.');
+					select.focus();
+					return;
+				}
+
+				// ✅ 태그
+				const tag = document.querySelector('.tag')?.textContent.trim();
+
+				// ✅ 대표 이미지 경로
+				const imgSrc = document.querySelector('.image-box img')?.getAttribute('src');
+
+				// ✅ 타이틀
+				const title = document.querySelector('.title')?.textContent.trim();
+
+				// ✅ 예상출고일 (id로 직접 접근)
+				const estimatedDate = document.getElementById('startDelivery')?.textContent.trim() || '';
+
+				// ✅ 선택된 옵션명 및 가격 추출
+				//선택된 옵션 텍스트 상품명만 추출
+				const selectedOptionText = select.options[select.selectedIndex].text;
+				const productNameOnly = selectedOptionText.replace(/\d[\d,]*원/, '').trim();
+				//옵션에서 가격만 정규식으로 추출 (ex: "29,900")
+				const priceMatch = selectedOptionText.match(/(\d[\d,]*)원/);
+				const price = priceMatch ? priceMatch[1] : '';
+
+				// ✅ 상품 ID 가져오기 (예: 1, 2, 3)
+				const productId = 'musket';
+
+				// ✅ localStorage에 저장
+				const productData = {
+					tag, // 카테고리 태그
+					image: imgSrc, // 대표 이미지 경로
+					title, // 상품명
+					estimatedDate, // 예상 출고일
+					selectedOption: productNameOnly, // 옵션명 (가격 제외)
+					price, // 옵션 가격만 추출
+					productId,
+				};
+
+				localStorage.setItem('selectedProduct', JSON.stringify(productData));
+
+				// 선택된 상품 처리
+				location.href = './product_payment.html'; // 여기에 원하는 링크 넣기
+			}
+
+			// 후기탭
+			$(document).ready(function () {
+				const productId = 'musket'; // 고정 상품 ID
+
+				// 로컬스토리지에서 해당 상품의 후기들 불러오기
+				let reviews = JSON.parse(localStorage.getItem('reviews_' + productId)) || [];
+
+				// 후기 목록이 있을 경우
+				if (reviews.length > 0) {
+					let reviewsHtml = reviews
+						.map(function (review) {
+							return `
+                <div class="review">
+                    <h4>${review.title}</h4>
+                    <p class="user-review">${review.content}</p>
+										<p class="time-id">${review.userId}</p>
+										<p class="time-id">${review.date}</p>
+                </div>
+            `;
+						})
+						.join('');
+
+					$('#reviewsList').html(reviewsHtml);
+				} else {
+					$('#reviewsList').html('<p>등록된 후기가 없습니다.</p>');
+				}
+			});
+		</script>
+	</body>
+</html>

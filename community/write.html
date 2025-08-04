@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>글쓰기</title>
+		<style>
+			body {
+				background-color: #f4f4f4;
+			}
+			.container {
+				background: white;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			}
+			input,
+			textarea {
+				padding: 10px;
+				margin: 10px 0;
+				border-radius: 5px;
+				border: 1px solid #ccc;
+				font-size: 1rem;
+			}
+			button {
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 8px;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			.back-button {
+				color: white;
+				padding: 10px 20px;
+				border-radius: 8px;
+				text-decoration: none;
+				font-weight: bold;
+				background-color: #0a8b11;
+				font-size: 0.9rem; /* 폰트 크기 줄임 */
+			}
+			#image {
+				margin-bottom: 30px;
+			}
+
+			@media (min-width: 1024px) {
+				.container {
+					width: 910px;
+					height: 400px;
+					padding: 20px;
+					margin-top: 60px;
+				}
+				.buttons {
+					display: flex;
+					gap: 656px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					width: 560px;
+					height: 425px;
+					padding: 20px;
+				}
+				.buttons {
+					display: flex;
+					gap: 325px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="container">
+					<h2>글쓰기</h2>
+					<input type="text" id="title" placeholder="제목" style="width: 95%" />
+					<textarea id="content" rows="5" placeholder="내용" style="width: 95%"></textarea>
+					<input type="file" id="image" accept="image/*" style="width: 95%" />
+					<div class="buttons">
+						<a href="./community.html" class="back-button" id="back-button">커뮤니티로 돌아가기</a>
+						<button id="submit-post" style="font-size: 14.4px">등록</button>
+					</div>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+
+		<script>
+			$('#submit-post').click(function () {
+				const title = $('#title').val().trim();
+				const content = $('#content').val().trim();
+				const today = new Date();
+				today.setHours(today.getHours() + 9); // UTC 기준 시간에 9시간 더해서 한국 시간으로 변환
+				const formattedDate = today.toISOString().split('T')[0]; // 날짜 부분만 추출 (yyyy-mm-dd)
+				const image = $('#image')[0].files[0];
+
+				// 로그인된 유저에서 작성자 이름 가져오기
+				const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+				const author = loggedInUser?.name || '익명';
+
+				if (!title || !author || !content) {
+					alert('모든 항목을 입력해주세요.');
+					return;
+				}
+
+				// 이미지 파일 형식 체크
+				const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+				if (image && !allowedTypes.includes(image.type)) {
+					alert('JPG, PNG, WEBP, GIF 형식의 이미지만 업로드 가능합니다.');
+					return;
+				}
+
+				if (image) {
+					const reader = new FileReader();
+					reader.onloadend = function () {
+						const imageBase64 = reader.result;
+						savePost(imageBase64);
+					};
+					reader.readAsDataURL(image);
+				} else {
+					savePost(''); // 이미지가 없을 때 빈 문자열 전달
+				}
+
+				function savePost(imageBase64) {
+					// 기존 게시글 목록을 가져옵니다. (없다면 빈 배열로 초기화)
+					const posts = JSON.parse(localStorage.getItem('posts')) || [];
+					// 새로운 postId 계산 (현재 저장된 게시글 중 가장 큰 postId에 +1을 더함)
+					const postId = posts.length > 0 ? posts[posts.length - 1].postId + 1 : 1;
+
+					// 새로운 글 객체 생성
+					const post = {
+						postId, // postId 추가
+						title,
+						author,
+						content,
+						date: formattedDate,
+						image: imageBase64,
+					};
+
+					// 새 글을 맨 끝에 추가
+					posts.push(post); // 최근 글이 맨 끝에 추가되도록 수정
+					// 갱신된 게시글 목록을 다시 localStorage에 저장
+					localStorage.setItem('posts', JSON.stringify(posts));
+
+					alert('게시글이 등록되었습니다.');
+					window.location.href = './community.html';
+				}
+			});
+		</script>
+	</body>
+</html>

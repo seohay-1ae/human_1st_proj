@@ -1,21 +1,21 @@
 {
-	"recommendations": [
-		"dbaeumer.vscode-eslint",
-		"donjayamanne.jquerysnippets",
-		"ecmel.vscode-html-css",
-		"esbenp.prettier-vscode",
-		"formulahendry.auto-rename-tag",
-		"formulahendry.code-runner",
-		"kisstkondoros.vscode-gutter-preview",
-		"ms-ceintl.vscode-language-pack-ko",
-		"ms-vscode.live-server",
-		"naumovs.color-highlight",
-		"oderwat.indent-rainbow",
-		"pranaygp.vscode-css-peek",
-		"ritwickdey.liveserver",
-		"solnurkarim.html-to-css-autocompletion",
-		"streetsidesoftware.code-spell-checker",
-		"vincaslt.highlight-matching-tag",
-		"zignd.html-css-class-completion"
-	]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "donjayamanne.jquerysnippets",
+    "ecmel.vscode-html-css",
+    "esbenp.prettier-vscode",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.code-runner",
+    "kisstkondoros.vscode-gutter-preview",
+    "ms-ceintl.vscode-language-pack-ko",
+    "ms-vscode.live-server",
+    "naumovs.color-highlight",
+    "oderwat.indent-rainbow",
+    "pranaygp.vscode-css-peek",
+    "ritwickdey.liveserver",
+    "solnurkarim.html-to-css-autocompletion",
+    "streetsidesoftware.code-spell-checker",
+    "vincaslt.highlight-matching-tag",
+    "zignd.html-css-class-completion"
+  ]
 }

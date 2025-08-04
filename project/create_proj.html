@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>프로젝트 생성</title>
+		<style>
+			.create-proj {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 30px;
+			}
+			.create-button {
+				color: white;
+				padding: 10px 20px;
+				margin-top: 20px;
+				margin-bottom: 20px;
+				font-size: 1.1rem; /* 폰트 크기 줄임 */
+				border: none;
+				border-radius: 8px;
+				text-decoration: none;
+				font-weight: bold;
+				transition: background-color 0.3s;
+				display: inline-block; /* 버튼처럼 보이도록 설정. 부모 컨테이너의 너비를 차지함 (버튼 안의 글씨를 정확히 클릭하지 않아도 되도록) */
+				background-color: #0a8b11;
+			}
+			.benefit,
+			.progress {
+				text-align: left;
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(360px, 2fr));
+				gap: 20px;
+			}
+
+			.card {
+				padding: 0;
+				box-shadow: 3px 3px 8px 4px rgba(0, 0, 0, 0.15);
+				text-align: left;
+				overflow: hidden;
+				border-radius: 10px;
+			}
+
+			.card img {
+				width: 100%;
+				display: block;
+			}
+
+			.progress {
+				color: #2b6653;
+				font-weight: bold;
+				margin-bottom: 8px;
+				font-size: 15px;
+			}
+
+			.title {
+				font-size: 14px;
+				font-weight: 500;
+				margin-bottom: 12px;
+				color: #222;
+			}
+			@media (min-width: 1024px) {
+				.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(360px, 2fr));
+				gap: 20px;}
+				.reason{
+					margin-bottom: 20px;
+				}
+			}
+      @media (min-width: 750px) and (max-width: 1023px) {
+        .grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(560px, 1fr));
+				gap: 80px;
+        }
+				.reason{
+					margin: 40px 0 30px 0;
+				}
+      }
+
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<div class="container">
+					<div class="create-proj">
+						<h1>프로젝트 생성</h1>
+						<a href="./proj_info.html" class="create-button">지금 시작하기</a>
+						<hr style="height: 2px; background-color: rgb(218, 218, 218); width: 100%" />
+					</div>
+					<div class="benefit">
+						<h2 class="reason">SIDEMENU를 선택해야 하는 이유</h2>
+						<div class="grid" id="createrBenefits">
+							<div class="card">
+								<img src="../resources/create_proj01.png" alt="이미지01" />
+							</div>
+							<div class="card">
+								<img src="../resources/create_proj02.png" alt="이미지02" />
+							</div>
+							<div class="card">
+								<img src="../resources/create_proj03.png" alt="이미지03" />
+							</div>
+							<div class="card">
+								<img src="../resources/create_proj04.png" alt="이미지04" />
+							</div>
+						</div>
+					</div>
+					<div class="progress">
+						<h2 style="margin: 70px 0 20px 0;">펀딩 프로젝트 신청 절차 안내</h2>
+            <div class="card">
+              <img src="../resources/Createproj.png" alt="이미지05" />
+            </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script></script>
+	</body>
+</html>

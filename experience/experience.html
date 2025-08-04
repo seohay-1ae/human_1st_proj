@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>experience</title>
+		<style>
+			/* 부모 컨테이너 스타일링*/
+			.company-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 30px; /* 카드 간 간격 */
+				padding: 20px; /* 컨테이너 내부 여백 */
+				margin: 0 auto; /* 가운데 정렬 */
+			}
+
+			/* 회사 카드 스타일링 */
+			.company-card {
+				position: relative;
+				background-size: cover;
+				background-position: center;
+				border: 1px solid #ddd;
+				border-radius: 10px;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+				padding: 15px;
+				display: flex;
+				flex-direction: column;
+				width: 309px;
+				height: 309px;
+
+				/* ✅ 애니메이션 효과 추가 */
+				transition:
+					transform 0.25s ease,
+					box-shadow 0.25s ease;
+			}
+
+			/* ✅ 마우스 올렸을 때 효과 */
+			.company-card:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+			}
+
+			.card-1 {
+				background-image: url('../resources/experience01.jpg');
+			}
+
+			.card-2 {
+				background-image: url('../resources/experience02.jpg');
+			}
+			.card-3 {
+				background-image: url('../resources/experience03.jpg');
+			}
+			.card-4 {
+				background-image: url('../resources/experience04.jpg');
+			}
+
+			.card-5 {
+				background-image: url('../resources/experience05.jpg');
+			}
+			.card-6 {
+				background-image: url('../resources/experience06.jpg');
+			}
+			.card-7 {
+				background-image: url('../resources/experience07.jpg');
+			}
+			.card-8 {
+				background-image: url('../resources/experience08.jpg');
+			}
+			.company-content {
+				margin-top: auto; /* 텍스트와 버튼을 하단으로 내림 */
+				display: flex;
+				flex-direction: column; /* 세로로 쌓이게 */
+				position: relative; /* 콘텐츠가 오버레이 위에 오도록 */
+				z-index: 2; /* 텍스트와 버튼이 오버레이 위에 */
+			}
+
+			/* 카드 안의 텍스트 스타일링 */
+			.company-card p {
+				margin: 0 0 0.1rem 0; /* 텍스트 간 간격 */
+				font-size: 14px; /* 글자 크기 */
+				color: #fff; /* 글자 색상 */
+				text-shadow: 0 0 2px rgba(0, 0, 0, 0.8); /* 검정 그림자로 선명하게 */
+				line-height: 1.5;
+			}
+
+			/* 첫 번째 <p> 태그(예: "업체이름") 강조 */
+			.company-card p:first-child {
+				font-weight: bold; /* 굵은 글씨 */
+				font-size: 16px; /* 조금 더 큰 글씨 */
+				margin-bottom: 0.3rem; /* 첫 번째 텍스트와 나머지 간격 약간 더 넓게 */
+				color: #fff;
+			}
+			.experience {
+				font-size: 30px;
+				font-weight: 700;
+				margin-bottom: 20px;
+				border-bottom: 2px solid #0000002f;
+				padding-bottom: 10px;
+			}
+			/* 페이징 css추가 */
+			.pagination {
+				margin-top: 40px;
+				text-align: center;
+			}
+
+			.page-btn {
+				background-color: #e5e7eb;
+				color: #111827;
+				border: none;
+				padding: 8px 16px;
+				margin: 0 4px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: 600;
+				transition: background-color 0.3s;
+			}
+
+			.page-btn:hover {
+				background-color: #2b6653;
+				color: #fff;
+			}
+			.page-btn.active {
+				background-color: #2b6653;
+				color: white;
+			}
+			@media (min-width: 1024px) {
+				.company-container {
+					padding: 0;
+					margin: 30px 0;
+				}
+				.company-card {
+					width: 425px;
+					height: 425px; /* 카드 높이 (화면에 맞게 조정) */
+				}
+			}
+
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.company-container {
+					padding: 0;
+					width: 600px;
+					margin-bottom: 85px;
+				}
+				.experience {
+					font-size: 30px;
+					font-weight: 700;
+					margin-bottom: 20px;
+					border-bottom: 2px solid #0000002f;
+					padding-bottom: 10px;
+					width: 620px;
+				}
+				.company-card {
+					position: relative; /* 오버레이를 위해 상대 위치 설정 */
+					background-size: cover; /* 이미지가 카드를 꽉 채우도록 */
+					background-position: center; /* 이미지 중심 정렬 */
+					border: 1px solid #ddd; /* 테두리 */
+					border-radius: 10px; /* 둥근 모서리 */
+					box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+					padding: 15px; /* 카드 내부 여백 */
+					display: flex;
+					flex-direction: column; /* 세로로 정렬 */
+					width: 580px;
+					height: 580px; /* 카드 높이 (화면에 맞게 조정) */
+					margin-bottom: 15px;
+				}
+				.company-card p:first-child {
+					font-size: 30px; /* 조금 더 큰 글씨 */
+				}
+				.company-card p {
+					font-size: 25px; /* 글자 크기 */
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="container">
+					<div class="experience">견학 / 체험</div>
+					<div class="company-container">
+						<a href="https://farm8.co.kr/" target="_blank" class="company-card card-1">
+							<div class="company-content">
+								<p>업체이름: FARM8 아카데미</p>
+								<p>상품 종류: 상추</p>
+								<p>위치: 서울특별시</p>
+							</div>
+						</a>
+
+						<a
+							href="https://www.greenmonsters.online/experience"
+							target="_blank"
+							class="company-card card-2"
+						>
+							<div class="company-content">
+								<p>업체이름: 그린몬스터즈</p>
+								<p>상품 종류: 오이</p>
+								<p>위치: 충청남도 보령시</p>
+							</div>
+						</a>
+						<a href="https://daejeonfarm.com/" target="_blank" class="company-card card-3">
+							<div class="company-content">
+								<p>업체이름: 대전팜 둥구나무</p>
+								<p>상품 종류: 토마토</p>
+								<p>위치: 대전광역시</p>
+							</div>
+						</a>
+						<a
+							href="http://www.werealfarm.co.kr/screen/hp/"
+							target="_blank"
+							class="company-card card-4"
+						>
+							<div class="company-content">
+								<p>업체이름: 위릴팜</p>
+								<p>상품 종류: 딸기</p>
+								<p>위치: 울산광역시</p>
+							</div>
+						</a>
+						<a href="http://maumfarm.co.kr/#HOME" target="_blank" class="company-card card-5">
+							<div class="company-content">
+								<p>업체이름: 마음농장</p>
+								<p>상품 종류: 딸기</p>
+								<p>위치: 남양주시</p>
+							</div>
+						</a>
+						<a href="https://blog.naver.com/good_mush" target="_blank" class="company-card card-6">
+							<div class="company-content">
+								<p>업체이름: 모두의 농장</p>
+								<p>상품 종류: 버섯</p>
+								<p>위치: 용인시</p>
+							</div>
+						</a>
+						<a href="https://thankyouvery.modoo.at/" target="_blank" class="company-card card-7">
+							<div class="company-content">
+								<p>업체이름: 땡큐베리팜</p>
+								<p>상품 종류: 포도</p>
+								<p>위치: 화성시</p>
+							</div>
+						</a>
+						<a href="https://ayeobi.com/" target="_blank" class="company-card card-8">
+							<div class="company-content">
+								<p>업체이름: 어여비주말농장</p>
+								<p>상품 종류: 샤인머스켓</p>
+								<p>위치: 의왕시</p>
+							</div>
+						</a>
+					</div>
+					<!-- 페이징 버튼 -->
+					<div class="pagination">
+						<button class="page-btn" data-page="1">1</button>
+						<button class="page-btn" data-page="2">2</button>
+						<button class="page-btn" data-page="3">3</button>
+						<button class="page-btn" data-page="4">4</button>
+						<button class="page-btn" data-page="5">5</button>
+					</div>
+				</div>
+			</main>
+		</div>
+	</body>
+	<!-- 페이징 스크립트 -->
+	<script>
+		$(document).ready(function () {
+			const itemsPerPage = 4;
+			const $cards = $('.company-card'); // 이 부분이 핵심!
+			const totalItems = $cards.length;
+			const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+			function showPage(page) {
+				$cards.hide();
+				const start = (page - 1) * itemsPerPage;
+				const end = start + itemsPerPage;
+				$cards.slice(start, end).show();
+			}
+
+			$('.page-btn').on('click', function () {
+				const page = parseInt($(this).data('page'));
+
+				// 버튼 스타일 초기화 후 현재 버튼 활성화
+				$('.page-btn').removeClass('active');
+				$(this).addClass('active');
+
+				showPage(page);
+			});
+
+			// 초기 첫 페이지에 active 클래스 설정
+			$('.page-btn[data-page="1"]').addClass('active');
+
+			// 첫 페이지 초기 표시
+			showPage(1);
+		});
+	</script>
+	<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+	<script defer src="../common/header3.js"></script>
+	<script defer src="../common/footer2.js"></script>
+</html>

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>게시물 신고 관리</title>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+
+			.main-wrapper {
+				display: flex;
+				flex-direction: column;
+			}
+			.container {
+				width: 90%;
+				margin: 0;
+				background: #ffffff;
+				padding: 20px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+				border-radius: 10px;
+			}
+			.header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 20px;
+			}
+			.header h3 {
+				margin: 0;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				text-align: center;
+			}
+			th,
+			td {
+				border: 1px solid #ccc;
+				padding: 8px;
+				white-space: nowrap; /* 텍스트는 한 줄로 유지 */
+				overflow: hidden; /* 넘친 내용은 숨김 */
+				text-overflow: ellipsis; /* 넘친 부분은 "..."으로 표시 */
+			}
+			th {
+				background-color: #f1c40f;
+				color: #000;
+			}
+			.btn-approve {
+				background-color: red;
+				border: none;
+				padding: 5px 10px;
+				cursor: pointer;
+				font-weight: bold;
+				color: white;
+			}
+			input[type='checkbox'] {
+				transform: scale(1.2);
+			}
+			@media (max-width: 768px) {
+				table {
+					font-size: 14px;
+				}
+			}
+			@media (max-width: 768px) {
+				.main-wrapper {
+					margin-left: 0; /* 모바일에서는 사이드바 밀리지 않도록 설정 */
+				}
+			}
+
+			@media (max-width: 1023px) and (min-width: 750px) {
+				.container {
+					width: 500px;
+					margin: auto;
+					margin-top: 120px;
+				}
+				.col-1 {
+					width: 4.5%;
+				}
+				.col-2 {
+					width: 10%;
+				}
+				.col-3 {
+					width: 5%;
+				}
+				.col-4 {
+					width: 8%;
+				}
+				.col-5 {
+					width: 6%;
+				}
+				.col-6 {
+					width: 6%;
+				}
+				.table-container {
+					overflow-x: scroll;
+				}
+			}
+
+			@media (min-width: 1024px) {
+				.container {
+					margin: auto;
+					margin-top: 120px;
+					width: 980px;
+				}
+				.col-1 {
+					width: 3%;
+				}
+				.col-2 {
+					width: 23%;
+				}
+				.col-3 {
+					width: 9%;
+				}
+				.col-4 {
+					width: 8%;
+				}
+				.col-5 {
+					width: 6%;
+				}
+				.col-6 {
+					width: 5%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="main-wrapper">
+			<!-- 사이드바 삽입 -->
+			<div id="sidebar-container"></div>
+
+			<!-- 첫 번째 컨테이너 -->
+			<div class="container">
+				<div class="header">
+					<h3>게시물 신고</h3>
+				</div>
+				<div class="table-container">
+					<table>
+						<colgroup>
+							<!-- 첫 번째 열 (체크박스) -->
+							<col class="col-1" />
+							<!-- 두 번째 열 (제목) -->
+							<col class="col-2" />
+							<!-- 세 번째 열 (작성자) -->
+							<col class="col-3" />
+							<!-- 네 번째 열 (작성일자) -->
+							<col class="col-4" />
+							<!-- 다섯 번째 열 (신고횟수) -->
+							<col class="col-5" />
+							<!-- 여섯 번째 열 (관리) -->
+							<col class="col-6" />
+						</colgroup>
+						<thead>
+							<tr>
+								<th><input type="checkbox" id="select-all" /></th>
+								<!-- ✅ 변경 -->
+								<th>제목</th>
+								<th>작성자</th>
+								<th>작성일자</th>
+								<th>신고횟수</th>
+								<th>관리</th>
+							</tr>
+						</thead>
+						<tbody id="post-list">
+							<!-- 게시물 목록은 JavaScript로 동적으로 추가됩니다 -->
+						</tbody>
+					</table>
+				</div>
+				<button
+					id="delete-selected"
+					style="
+						margin-top: 10px;
+						background-color: #e74c3c;
+						color: white;
+						padding: 10px 15px;
+						border: none;
+						border-radius: 5px;
+						cursor: pointer;
+					"
+				>
+					선택 삭제
+				</button>
+			</div>
+		</main>
+		<script src="./admin_sidebar.js"></script>
+		<script>
+			let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+			function renderPosts() {
+				const tbody = document.getElementById('post-list');
+				tbody.innerHTML = '';
+
+				posts.forEach((post, index) => {
+					const reportCount = localStorage.getItem(`reportCount_post_${index}`) || 0;
+
+					const row = document.createElement('tr');
+					row.innerHTML = `
+						<td><input type="checkbox" class="select-checkbox" data-index="${index}" /></td>
+						<td>${post.title}</td>
+						<td>${post.author}</td>
+						<td>${post.date}</td>
+						<td>${reportCount}</td>
+						<td><button class="btn-approve" data-index="${index}">삭제</button></td>
+					`;
+					tbody.appendChild(row);
+				});
+			}
+
+			// 로드 후 렌더링
+			renderPosts();
+
+			// ✅ 전체 선택
+			document.addEventListener('change', (e) => {
+				if (e.target.id === 'select-all') {
+					const checked = e.target.checked;
+					document.querySelectorAll('.select-checkbox').forEach((cb) => (cb.checked = checked));
+				}
+			});
+
+			// ✅ 개별 삭제
+			document.addEventListener('click', (e) => {
+				if (e.target.classList.contains('btn-approve')) {
+					const index = parseInt(e.target.dataset.index);
+					if (!isNaN(index)) {
+						if (confirm('해당 게시글을 삭제하시겠습니까?')) {
+							posts.splice(index, 1);
+							localStorage.removeItem(`reportCount_post_${index}`);
+							updateLocalStorageAndReports();
+						}
+					}
+				}
+			});
+
+			// ✅ 선택 삭제
+			document.getElementById('delete-selected').addEventListener('click', () => {
+				const checked = Array.from(document.querySelectorAll('.select-checkbox:checked'));
+				if (checked.length === 0) {
+					alert('삭제할 게시글을 선택해주세요.');
+					return;
+				}
+				if (!confirm('선택된 게시글을 삭제하시겠습니까?')) return;
+
+				const indexes = checked.map((cb) => parseInt(cb.dataset.index)).sort((a, b) => b - a);
+				indexes.forEach((i) => {
+					posts.splice(i, 1);
+					localStorage.removeItem(`reportCount_post_${i}`);
+				});
+				updateLocalStorageAndReports();
+			});
+
+			// ✅ localStorage 갱신 및 신고 키 재정렬
+			function updateLocalStorageAndReports() {
+				localStorage.setItem('posts', JSON.stringify(posts));
+				// 신고 횟수 재정렬
+				const keys = Object.keys(localStorage).filter((k) => k.startsWith('reportCount_post_'));
+				keys.forEach((k) => localStorage.removeItem(k));
+				posts.forEach((_, i) => localStorage.setItem(`reportCount_post_${i}`, 0)); // 기본값 0
+				renderPosts();
+			}
+		</script>
+	</body>
+</html>

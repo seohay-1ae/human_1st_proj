@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>프로젝트 정보</title>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+			/* footer 하단 고정 */
+			.main-wrapper {
+				flex: 1;
+				display: flex;
+				flex-direction: row; /* 사이드바 + 콘텐츠 수평 정렬 */
+				min-height: 100vh;
+			}
+			/* 사이드바 */
+			#sidebar-container {
+				flex-shrink: 0;
+			}
+			h2 {
+				padding: 2rem 1rem;
+			}
+			.input-data label,
+			.input-data input,
+			.input-data select,
+			.input-data textarea,
+			.unit-label {
+				font-size: 1.5rem;
+			}
+			.input-data label {
+				min-width: 12rem;
+				max-width: 20rem;
+				margin: 0;
+			}
+			.input-data input,
+			.input-data select {
+				flex: 1;
+				padding: 8px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+			.input-data input[type='file'] {
+				padding: 8px;
+			}
+			.button-container {
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: nowrap;
+				gap: 10px;
+				width: 100%;
+				margin-top: 20px;
+			}
+			.button {
+				flex: 0 0 auto;
+				width: auto;
+				padding: 0.7rem 3rem;
+				font-size: 1.1rem;
+				text-align: center;
+				border: none;
+				border-radius: 8px;
+				color: #fff;
+				background-color: #0a8b11;
+				text-decoration: none;
+				white-space: nowrap;
+				display: inline-block;
+				cursor: pointer;
+			}
+			.button.prev-button {
+				background-color: #999;
+			}
+			.button.next-button {
+				background-color: #0a8b11;
+			}
+			.input-data > div {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 20px;
+			}
+			.required {
+				color: red;
+			}
+			.amount-wrapper {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				width: 100%;
+				max-width: 2000px;
+			}
+			.amount-wrapper input {
+				min-width: 0;
+				width: 100%;
+				flex-grow: 1;
+			}
+			.input-data input {
+				width: 100%;
+				padding: 8px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+			.unit-label {
+				margin-left: 4px;
+				white-space: nowrap;
+				flex-shrink: 0;
+			}
+			@media (max-width: 1023px) {
+				#sidebar-container {
+					display: none;
+				}
+				.button-container {
+					flex-direction: row !important;
+					justify-content: space-between;
+					align-items: center;
+					gap: 10px;
+				}
+				.button {
+					font-size: 0.9rem;
+					padding: 8px;
+					flex: 1;
+					min-width: 0;
+				}
+			}
+			@media (max-width: 750px) {
+				.input-data {
+					flex-direction: column;
+					align-items: stretch;
+				}
+				.input-data > div {
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					width: 100%;
+				}
+				.input-data > div > label {
+					margin-bottom: 0;
+					display: inline;
+				}
+				.input-data .category {
+					display: flex;
+					width: 100%;
+				}
+				.input-data .category span {
+					margin-left: 10px;
+				}
+				.button {
+					font-size: 0.9rem;
+					padding: 8px;
+				}
+				h2 {
+					font-size: 1.65rem;
+					padding: 1rem 0.3rem;
+				}
+				.route p {
+					font-size: 0.85rem;
+				}
+			}
+			@media (min-width: 1024px) {
+				.container {
+					padding: 0;
+					width: 970px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					margin: 60px auto auto 68px;
+					padding: 0;
+					width: 600px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="main-wrapper">
+			<!-- 사이드바를 삽입할 위치 -->
+			<div id="sidebar-container"></div>
+			<!-- 전체 콘텐츠 -->
+			<div class="container">
+				<div class="route">
+					<p>프로젝트 생성 > <span style="color: #0a8b11">프로젝트 정보</span></p>
+				</div>
+				<div class="now-page">
+					<h2>프로젝트 정보</h2>
+				</div>
+				<div class="input-data">
+					<div class="category">
+						<label for="categorySelect">카테고리 <span class="required">*</span></label>
+						<select id="categorySelect" required>
+							<option value="" disabled selected hidden>카테고리 선택</option>
+							<option value="fruit">과일</option>
+							<option value="vegetable">야채</option>
+							<option value="health">건강식품</option>
+						</select>
+					</div>
+					<div class="project-name">
+						<label for="projectName">프로젝트 이름 <span class="required">*</span></label>
+						<input
+							type="text"
+							id="projectName"
+							required
+							placeholder="프로젝트 이름을 입력하세요."
+						/>
+					</div>
+					<div class="thumbnail">
+						<label for="thumbnailInput">대표이미지 <span class="required">*</span></label>
+						<input type="file" id="thumbnailInput" accept="image/*" required />
+					</div>
+					<div class="project-startday">
+						<label for="startDate">프로젝트 시작일 <span class="required">*</span></label>
+						<input type="date" placeholder="YYYY-MM-DD" id="startDate" required />
+					</div>
+					<div class="project-dueday">
+						<label for="dueDate">프로젝트 종료일 <span class="required">*</span></label>
+						<input type="date" placeholder="YYYY-MM-DD" id="dueDate" required />
+					</div>
+					<div class="target-amount">
+						<label for="targetAmount">목표금액 <span class="required">*</span></label>
+						<div class="amount-wrapper">
+							<input type="text" id="targetAmount" required />
+							<span class="unit-label">원</span>
+						</div>
+					</div>
+					<div class="button-container">
+						<a href="./create_proj.html" class="button prev-button">취소</a>
+						<a href="#" class="button next-button">다음</a>
+					</div>
+				</div>
+			</div>
+		</main>
+		<!-- footer 위치는 여기! -->
+		<footer id="footer"></footer>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입) -->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script>
+			// 사이드바 파일을 불러와서 div에 삽입
+			if (window.innerWidth >= 1024) {
+				fetch('sidebar.html')
+					.then((response) => response.text())
+					.then((data) => {
+						document.getElementById('sidebar-container').innerHTML = data;
+
+						// "카테고리" 항목의 글씨 색을 바꾸는 JavaScript 코드
+						const projInfoLink = document.querySelector('.sidebar .proj_info');
+						if (projInfoLink) {
+							projInfoLink.style.color = '#0a8b11';
+						}
+					})
+					.catch((error) => console.error('사이드바를 불러오는 데 실패했습니다:', error));
+			}
+
+			//날짜
+			const today = new Date();
+			today.setHours(today.getHours() + 9);
+			const formattedDate = today.toISOString().split('T')[0];
+
+			const startInput = document.getElementById('startDate');
+			const dueInput = document.getElementById('dueDate');
+
+			// 오늘 이후만 선택 가능하도록 초기 설정
+			startInput.setAttribute('min', formattedDate);
+			dueInput.setAttribute('min', formattedDate);
+
+			// 시작일 바뀌면 종료일 최소값 재설정
+			startInput.addEventListener('change', function () {
+				const selectedStart = new Date(this.value);
+				const nextDay = new Date(selectedStart);
+				nextDay.setDate(selectedStart.getDate() + 1);
+
+				const minDue = nextDay.toISOString().split('T')[0];
+				dueInput.setAttribute('min', minDue);
+			});
+
+			// 종료일 바뀌면 시작일보다 이른지 체크
+			dueInput.addEventListener('change', function () {
+				const startVal = new Date(startInput.value);
+				const dueVal = new Date(this.value);
+
+				if (dueVal <= startVal) {
+					alert('종료일은 시작일보다 이후여야 합니다.');
+					this.value = '';
+				}
+			});
+
+			//금액 포맷
+			const amountInput = document.getElementById('targetAmount');
+
+			amountInput.addEventListener('input', function (e) {
+				const cursorPosition = this.selectionStart;
+				const originalLength = this.value.length;
+
+				let value = this.value.replace(/[^0-9]/g, '');
+				if (value === '') {
+					this.value = '';
+					return;
+				}
+
+				this.value = Number(value).toLocaleString('ko-KR');
+
+				const newLength = this.value.length;
+				this.selectionEnd = cursorPosition + (newLength - originalLength);
+			});
+
+			//필수값 전부 입력해야 넘어가게
+			document.querySelector('.next-button').addEventListener('click', function (e) {
+				e.preventDefault();
+
+				const projectCategory = document.getElementById('categorySelect').value;
+				const projectName = document.getElementById('projectName').value.trim();
+				const projectStartDay = document.getElementById('startDate').value;
+				const projectEndDay = document.getElementById('dueDate').value;
+				const targetAmount = document.getElementById('targetAmount').value.replace(/,/g, '');
+				const projectThumbnail = document.getElementById('thumbnailInput');
+				const file = projectThumbnail.files[0];
+
+				if (
+					!projectCategory ||
+					projectCategory === '카테고리 선택' ||
+					!projectName ||
+					!projectStartDay ||
+					!projectEndDay ||
+					!targetAmount ||
+					!file
+				) {
+					let missing = [];
+					if (!projectCategory) missing.push('카테고리');
+					if (!projectName) missing.push('프로젝트 이름');
+					if (!file) missing.push('대표이미지');
+					if (!projectStartDay) missing.push('프로젝트 시작일');
+					if (!projectEndDay) missing.push('프로젝트 종료일');
+					if (!targetAmount) missing.push('목표금액');
+					alert(`다음 항목을 입력해주세요:\n${missing.join('\n')}`);
+					return;
+				}
+
+				const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+				if (!allowedTypes.includes(file.type)) {
+					alert('JPG, PNG, WEBP, GIF 형식의 이미지만 업로드 가능합니다.');
+					return;
+				}
+
+				const reader = new FileReader();
+				reader.onload = function () {
+					const base64Image = reader.result;
+
+					const data = {
+						projectCategory,
+						projectName,
+						projectStartDay,
+						projectEndDay,
+						targetAmount,
+					};
+
+					localStorage.setItem('projectInfo', JSON.stringify(data));
+					console.log('저장된 정보 데이터:', data);
+
+					window.location.href = './proj_story.html';
+				};
+
+				reader.readAsDataURL(file);
+			});
+		</script>
+	</body>
+</html>

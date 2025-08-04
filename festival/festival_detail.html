@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>영천과일축제</title>
+		<style>
+			body {
+				color: #222;
+			}
+
+			.subtitle {
+				color: #666;
+				font-size: 20px;
+				margin-bottom: 5px;
+			}
+
+			.title {
+				font-size: 40px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+
+			.date {
+				font-size: 20px;
+				margin-bottom: 30px;
+				color: #444;
+			}
+
+			.festival-image {
+				width: 100%;
+				max-width: 100%;
+				margin-bottom: 50px;
+			}
+
+			.section-title {
+				font-size: 30px;
+				font-weight: bold;
+				border-top: 2px solid #2222225d;
+				padding-top: 30px;
+				margin-bottom: 8px;
+			}
+
+			.section-sub {
+				color: #555;
+				font-size: 20px;
+				margin-bottom: 24px;
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr); /* 2개만 크게 */
+				gap: 30px;
+			}
+
+			.card {
+				background-color: #ccc8c148;
+				padding: 20px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+				text-align: left;
+			}
+
+			.card img {
+				width: 100%;
+				aspect-ratio: 400 / 266;
+				object-fit: contain;
+				background-color: #eee;
+				border-radius: 12px;
+				margin-bottom: 16px;
+				display: block;
+			}
+
+			.progress {
+				color: #2b6653;
+				font-weight: bold;
+				margin-bottom: 10px;
+				font-size: 17px;
+			}
+
+			.product-title {
+				font-size: 18px;
+				font-weight: bold;
+				font-weight: 500;
+				margin-bottom: 16px;
+				color: #222;
+			}
+
+			.info-box {
+				display: flex;
+				gap: 10px;
+			}
+
+			.info-item {
+				font-size: 13px;
+				padding: 6px 10px;
+				background-color: #d9f3b9;
+				border-radius: 6px;
+				color: #2b2b2b;
+				font-weight: 500;
+			}
+
+			@media (max-width: 768px) {
+				.grid {
+					grid-template-columns: 1fr;
+				}
+			}
+			@media (min-width: 768px) and (max-width: 1023px) {
+				.container {
+					margin-bottom: 60px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="container">
+					<div class="subtitle">새콤달콤한 황금빛 과일의 향연</div>
+					<div class="title">영천과일축제</div>
+					<div class="date">2025.10.20 ~ 2025.10.22</div>
+
+					<img
+						src="../resources/festival_detail_fruit.png"
+						alt="축제 설명 이미지"
+						class="festival-image"
+					/>
+
+					<div class="section-title">관련 상품</div>
+					<div class="section-sub">축제와 함께하는 상품</div>
+
+					<div class="grid">
+						<!-- 상품 01 -->
+						<div class="card">
+							<a href="../product/product_detail_musket.html?productId='musket'">
+								<img src="../resources/musket.png" alt="샤인머스켓" />
+							</a>
+							<div class="progress">150% 달성</div>
+							<div class="product-title">[별빛영천포도밭] 달콤한 별빛샤인머스켓 (씨 없는 포도)</div>
+							<div class="info-box">
+								<div class="info-item">150만 +</div>
+								<div class="info-item">30일 남음</div>
+							</div>
+						</div>
+
+						<!-- 상품 02 -->
+						<div class="card">
+							<a href="../product/product_detail_apple.html?productId='apple'">
+								<img src="../resources/apple.png" alt="사과" />
+							</a>
+							<div class="progress">80% 달성</div>
+							<div class="product-title">
+								[영천햇살사과농장] 따뜻한 햇살 속에서 자란 당도 1등급 사과
+							</div>
+							<div class="info-box">
+								<div class="info-item">80만 +</div>
+								<div class="info-item">27일 남음</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+	</body>
+</html>

@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>게시글 상세보기</title>
+		<style>
+			body {
+				background-color: #f4f4f4;
+			}
+			.container {
+				background: white;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			}
+			.post-title {
+				font-size: 1.5rem;
+				font-weight: bold;
+				margin-bottom: 10px;
+				padding-right: 80px; /* 버튼을 위한 여백 */
+			}
+			.post-author {
+				font-size: 1rem;
+				color: #555;
+			}
+			.post-date {
+				font-size: 1rem;
+				color: #888;
+			}
+			.post-content {
+				margin-top: 20px;
+			}
+			.post-image img {
+				max-width: 90%; /* 화면 너비에 맞게 이미지 크기 조정 */
+				height: auto; /* 비율에 맞게 높이 자동 조정 */
+				border-radius: 10px; /* 이미지 모서리 둥글게 처리 */
+			}
+			.comment-section {
+				margin-top: 30px;
+			}
+			.comment-input {
+				width: 95%;
+				padding: 10px;
+				margin: 12px 0 25px 0;
+				border-radius: 5px;
+				border: 1px solid #ccc;
+				font-size: 1rem;
+			}
+			.comment-button {
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 8px;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			.report-post {
+				background-color: red;
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 8px;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			.comment-list {
+				margin-top: 20px;
+			}
+			.comment {
+				padding: 10px;
+				background-color: #f9f9f9;
+				margin-bottom: 10px;
+				border-radius: 5px;
+			}
+			.comment-time {
+				font-size: 0.9rem;
+				color: #888;
+				margin-top: 5px;
+			}
+			.back-button {
+				background-color: #ccc;
+				color: white;
+				margin-top: 10px;
+				padding: 10px 20px;
+				border-radius: 8px;
+				text-decoration: none;
+				font-size: 1rem;
+				font-weight: bold;
+				top: 10px;
+				right: 20px; /* 오른쪽 상단에 위치 */
+				background-color: #0a8b11;
+			}
+
+			@media (min-width: 1024px) {
+				.container {
+					width: 910px;
+					padding: 20px;
+					margin-top: 60px;
+				}
+				.back-button {
+					position: absolute;
+					top: 155px;
+					right: 175px; /* 오른쪽 상단에 위치 */
+				}
+				.buttons {
+					display: flex;
+					gap: 695px;
+					align-items: center; /* 수직 정렬 */
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					width: 560px;
+					padding: 20px;
+				}
+				.back-button {
+					position: absolute;
+					top: 145px;
+					right: 90px; /* 오른쪽 상단에 위치 */
+				}
+				.buttons {
+					display: flex;
+					gap: 375px;
+					align-items: center; /* 수직 정렬 */
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="container">
+					<h2 class="post-title" id="post-title"></h2>
+					<div class="post-author" id="post-author"></div>
+					<div class="post-date" id="post-date"></div>
+					<div class="post-content" id="post-content"></div>
+					<div class="post-image" id="post-image"></div>
+
+					<!-- 댓글 섹션 -->
+					<div class="comment-section">
+						<h4>댓글</h4>
+						<input
+							type="text"
+							id="comment"
+							class="comment-input"
+							placeholder="댓글을 작성해주세요."
+						/>
+						<div class="buttons">
+							<button id="submit-comment" class="comment-button">댓글 작성</button>
+							<button id="report-post" class="report-post">게시물 신고</button>
+						</div>
+						<div class="comment-list" id="comment-list"></div>
+					</div>
+
+					<!-- 커뮤니티 페이지로 돌아가는 버튼 -->
+					<div class="parent">
+						<a href="#" class="back-button" onclick="goBack()">커뮤니티로 돌아가기</a>
+					</div>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script>
+			$(document).ready(function () {
+				// URL에서 postId 파라미터 추출
+				const urlParams = new URLSearchParams(window.location.search);
+				const postId = parseInt(urlParams.get('postId')); // URL에서 postId를 가져옴
+
+				// 전체 게시글 리스트 불러오기
+				const posts = JSON.parse(localStorage.getItem('posts')) || [];
+				const post = posts.find((p) => p.postId === postId); // postId로 해당 게시글 찾기
+				// postIndex를 해당 게시글이 있는 배열의 인덱스로 설정
+				const postIndex = posts.findIndex((p) => p.postId === postId);
+
+				if (post) {
+					// 게시글 내용 렌더링
+					$('#post-title').text(post.title);
+					$('#post-author').text(`작성자: ${post.author}`);
+					$('#post-date').text(`작성일: ${post.date}`);
+					$('#post-content').text(post.content);
+
+					// 이미지가 있는 경우 이미지 표시
+					if (post.image) {
+						$('#post-image').html(`<img src="${post.image}" alt="게시글 이미지" />`);
+					}
+
+					// 댓글 로드 (key: comments_postId)
+					const comments = JSON.parse(localStorage.getItem(`comments_${postId}`)) || [];
+					comments.forEach(({ comment, time }) => {
+						$('#comment-list').append(`
+							<div class="comment">
+								${comment}
+								<div class="comment-time">${time}</div>
+							</div>
+						`);
+					});
+
+					// 댓글 작성 버튼 클릭 시 실행될 함수 정의
+					$('#submit-comment').click(function () {
+						// 댓글 입력창의 값을 가져와서 앞뒤 공백 제거
+						const comment = $('#comment').val().trim();
+
+						// 댓글이 비어있지 않으면 (입력한 경우)
+						if (comment) {
+							// 현재 날짜와 시간을 문자열로 가져옴 (ex. 2025. 4. 17. 오전 10:30)
+							const time = new Date().toLocaleString();
+
+							// 새로운 댓글 객체 생성 (댓글 내용 + 작성 시간 포함)
+							const newComment = { comment, time };
+
+							// 기존 댓글 배열에 새 댓글을 추가
+							comments.push(newComment);
+
+							// 업데이트된 댓글 배열을 localStorage에 저장
+							localStorage.setItem(`comments_${postId}`, JSON.stringify(comments));
+
+							// 댓글 입력창 비워주기
+							$('#comment').val('');
+
+							// 화면에 새 댓글을 HTML로 추가
+							$('#comment-list').append(`
+									<div class="comment">
+										${comment}
+										<div class="comment-time">${time}</div>
+									</div>
+								`);
+						} else {
+							// 댓글이 비어있으면 경고창 띄우기
+							alert('댓글을 입력해주세요.');
+						}
+					});
+
+					// 게시물 신고 버튼 클릭 시 실행될 함수 정의
+					$('#report-post').click(function () {
+						// 신고 수를 저장할 localStorage 키 생성 (현제 페이지id 값에 해당하는 번호의 신고값이 각각 저장됨)
+						const reportKey = `reportCount_post_${postId}`;
+
+						// reportKey를 currentCount로 재정의하고, 값이 없으면 기본값 0 사용
+						const currentCount = parseInt(localStorage.getItem(reportKey)) || 0;
+
+						// 신고 수 1 증가하고 newCount로 재정의의
+						const newCount = currentCount + 1;
+
+						// 증가된 신고 수를 localStorage에 다시 저장
+						// (reportCount_post_1,2)
+						localStorage.setItem(reportKey, newCount);
+
+						// 사용자에게 신고 완료 및 신고 수 표시
+						alert(`게시글을 신고했습니다. 현재 신고 수: ${newCount}`);
+					});
+				} else {
+					// 유효하지 않은 postId일 경우
+					alert('해당 게시글을 찾을 수 없습니다.');
+				}
+			});
+			function goBack() {
+				const storedUser = localStorage.getItem('loggedInUser');
+				if (storedUser) {
+					const user = JSON.parse(storedUser);
+					if (user.id === 'admin') {
+						location.href = '../admin/admin_report.html';
+						return;
+					}
+				}
+				location.href = './community.html';
+			}
+		</script>
+	</body>
+</html>

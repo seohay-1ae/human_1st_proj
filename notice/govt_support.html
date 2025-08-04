@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>정부지원정책</title>
+		<style>
+
+			/* 페이지 설명 문구 스타일 */
+			body > p {
+				text-align: left;
+				color: #666;
+				margin-bottom: 60px;
+			}
+
+			.card-container {
+				display: flex;
+				flex-wrap: wrap; /* 카드가 많아지면 다음 줄로 넘어감 */
+				gap: 20px; /* 카드 간 간격 */
+				justify-content: center; /* 중앙 정렬 */
+				margin: 0 auto; /* 중앙 정렬 */
+			}
+
+			/* 네모 카드 스타일 */
+			.supportfund-card {
+				position: relative; /* 카드 내부에 상대 위치 설정 */
+				background-size: cover; /* 이미지가 카드를 꽉 채우도록 */
+				background-position: center; /* 이미지 중심 정렬 */
+				display: block; /* 블록 요소로 설정 */
+				text-decoration: none;
+				width: 350px;
+				border: 1px solid #ddd;
+				border-radius: 10px;
+				background-color: #ffffff; /* 흰색 배경 */
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+				transition:
+					transform 0.25s,
+					box-shadow 0.25s; /* 호버 시 애니메이션 효과 */
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+				overflow: hidden; /* 카드 내용이 카드 밖으로 나가지 않도록 */
+			}
+			.supportfund-card::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.45);
+				pointer-events: none;
+			}
+
+			/* 카드 내부 내용 스타일 */
+
+			/* 카드 호버 효과 */
+			.supportfund-card:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+			}
+
+			/* 카드 내부 내용 스타일 */
+			.card-content {
+				padding: 40px;
+				position: relative; /*  이미지 위에 겹침 */
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				padding: 32px 28px; /* 카드 내부 여백 */
+				color: #fff; /* 글씨 흰색 */
+				display: flex;
+				flex-direction: column; /* 세로로 정렬 */
+				justify-content: flex-end; /* 내용과 버튼 사이 간격 조정 */
+			}
+
+			/* 지원자금 타이틀 스타일 */
+			.card-content h2 {
+				font-size: 20px;
+				font-weight: 700;
+				color: #fff;
+				margin-bottom: 30px;
+				white-space: nowrap; /* 제목 한 줄 표시: 줄바꿈 방지 */
+			}
+
+			/* 접수기간 텍스트 스타일 */
+			.card-content p {
+				font-size: 16px;
+				color: #fff;
+				margin: 0;
+			}
+			.govPolicy {
+				font-size: 30px;
+				font-weight: 700;
+				margin-bottom: 20px;
+				border-bottom: 2px solid #0000002f;
+				padding-bottom: 10px;
+			}
+			/* 페이징 css추가 */
+			.pagination {
+				margin-top: 40px;
+				text-align: center;
+			}
+
+			.page-btn {
+				background-color: #e5e7eb;
+				color: #111827;
+				border: none;
+				padding: 8px 16px;
+				margin: 0 4px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: 600;
+				transition: background-color 0.3s;
+			}
+
+			.page-btn:hover {
+				background-color: #2b6653;
+				color: #fff;
+			}
+			.page-btn.active {
+				background-color: #2b6653;
+				color: white;
+			}
+
+			@media (min-width: 1024px) {
+				.card-container {
+					gap: 30px; /* 카드 간 간격 */
+					margin: 0;
+				}
+				.supportfund-card {
+					width: 455px;
+					height: 400px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.card-container {
+					gap: 46px; /* 카드 간 간격 */
+					margin: 0 0 50px 0;
+				}
+				.supportfund-card {
+					width: 640px;
+					height: 450px;
+				}
+				.card-content h2 {
+				font-size: 30px;
+			}
+				.card-content p {
+				font-size: 25px;
+				}
+			}
+		</style>
+	</head>
+</html>
+<body>
+	<div class="page-container">
+		<main class="page-content">
+			<!-- 본문 내용 -->
+
+			<div class="container">
+				<div class="govPolicy">정부지원정책 신청하기</div>
+				<p style="margin-bottom: 40px">정부에서 지원하는 농촌지원정책을 확인하세요.</p>
+				<div class="card-container">
+					<div class="card">
+						<a
+						href="https://www.greendaero.go.kr/svc/rfph/cpif/front/frtHome.do"
+						class="supportfund-card"
+						target="_blank"
+						style="background-image: url('../resources/supportfund1.jpg')"
+						>
+							<div class="card-content">
+								<h2>귀농창업자금</h2>
+								<p>접수기간: 자금 소진시까지</p>
+								<p>신청자격: 사이트에서 확인하세요</p>
+							</div>
+						</a>
+					</div>
+					<div class="card">
+						<a
+							href="https://www.rda.go.kr/young/content/custom0201.do"
+							class="supportfund-card"
+							target="_blank"
+							style="background-image: url('../resources/supportfund2.jpg')"
+						>
+							<div class="card-content">
+								<h2>청년농업인 영농정착 지원사업</h2>
+								<p>접수기간: 자금 소진시까지</p>
+								<p>신청자격: 사이트에서 확인하세요</p>
+							</div>
+						</a>
+					</div>
+					<div class="card">
+						<a
+						href="https://www.smartfarmkorea.net/contents/view.do?menuId=M1102010103"
+						class="supportfund-card"
+						target="_blank"
+						style="background-image: url('../resources/supportfund3.jpg')"
+						>
+						<div class="card-content">
+							<h2>스마트팜 종합자금</h2>
+							<p>접수기간: 자금 소진시까지</p>
+							<p>신청자격: 사이트에서 확인하세요</p>
+							</div>
+						</a>
+					</div>
+					<div class="card">
+						<a
+							href="https://www.smartfarmkorea.net/charge/supBusinessList.do?menuId=M11020301"
+							class="supportfund-card"
+							target="_blank"
+							style="background-image: url('../resources/supportfund4.jpg')"
+						>
+							<div class="card-content">
+								<h2>스마트팜 보조지원사업</h2>
+								<p>접수기간: 자금 소진시까지</p>
+								<p>신청자격: 사이트에서 확인하세요</p>
+							</div>
+						</a>
+					</div>
+			</div>
+				<!-- 페이징 버튼 -->
+				<div class="pagination">
+					<button class="page-btn" data-page="1">1</button>
+					<button class="page-btn" data-page="2">2</button>
+					<button class="page-btn" data-page="3">3</button>
+					<button class="page-btn" data-page="4">4</button>
+					<button class="page-btn" data-page="5">5</button>
+				</div>
+			</div>
+		</main>
+	</div>
+	<script defer src="../common/header3.js"></script>
+	<script defer src="../common/footer2.js"></script>
+</body>
+<!-- 페이징 스크립트 -->
+<script>
+	$(document).ready(function () {
+		const itemsPerPage = 4;
+		const $cards = $('.card');
+		const totalItems = $cards.length;
+		const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+		function showPage(page) {
+			$cards.hide();
+			const start = (page - 1) * itemsPerPage;
+			const end = start + itemsPerPage;
+			$cards.slice(start, end).show();
+		}
+
+		$('.page-btn').on('click', function () {
+			const page = parseInt($(this).data('page'));
+
+			// 버튼 스타일 초기화 후 현재 버튼 활성화
+			$('.page-btn').removeClass('active');
+			$(this).addClass('active');
+
+			showPage(page);
+		});
+
+		// 초기 첫 페이지에 active 클래스 설정
+		$('.page-btn[data-page="1"]').addClass('active');
+
+		// 첫 페이지 초기 표시
+		showPage(1);
+	});
+</script>
+</html>

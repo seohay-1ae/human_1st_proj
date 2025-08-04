@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://kit.fontawesome.com/516da99189.js" crossorigin="anonymous"></script>
+		<title>메인(로그아웃)</title>
+		<style>
+			/* 스타일 유지 */
+			.gallery-wrapper {
+				position: relative;
+				width: 90%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 10px;
+				border: 5px solid #ccc;
+				box-sizing: border-box;
+			}
+			.gallery-wrapper .gallery-list {
+				overflow: hidden;
+				position: relative;
+				width: 100%;
+				height: auto;
+			}
+			.gallery-wrapper .gallery-list li {
+				position: absolute;
+				left: 0;
+				display: none;
+			}
+			.gallery-wrapper .gallery-list li:first-child {
+				display: block;
+			}
+			.gallery-wrapper .gallery-list li.active {
+				display: block;
+			}
+			.gallery-wrapper .gallery-list li a {
+				display: block;
+				text-align: center;
+			}
+			.gallery-wrapper .gallery-list li a img {
+				display: block;
+				width: 100%;
+				height: auto;
+				max-height: 350px; /* PC 기준 최대 높이 */
+				object-fit: cover;
+			}
+			.gallery-wrapper .btn-prev,
+			.gallery-wrapper .btn-next {
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				color: #f4e9ed;
+				font-size: 26px;
+				cursor: pointer;
+			}
+			.gallery-wrapper .btn-prev {
+				left: 20px;
+			}
+			.gallery-wrapper .btn-next {
+				right: 20px;
+			}
+			.ctrl-box {
+				margin-top: 15px;
+				text-align: center;
+			}
+			.ctrl-box a .bullet {
+				display: inline-block;
+				width: 12px;
+				height: 12px;
+				border: 1px solid #cfd2d7;
+				border-radius: 100%;
+				background: #dfe2e7;
+				text-indent: -9999em;
+				font-size: 0;
+				vertical-align: middle;
+			}
+			.ctrl-box a.active .bullet {
+				border: 1px solid #d43a3a;
+				background: #fd4b4b;
+			}
+			.btn-ctrl {
+				margin-left: 10px;
+				padding: 0 4px;
+				border: 1px solid #b6b6b6;
+				border-radius: 4px;
+				background-color: #dadada;
+				line-height: 20px;
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(360px, 2fr));
+				gap: 20px;
+			}
+
+			.card {
+				background-color: #fff6e4;
+				padding: 15px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+				text-align: left;
+				/* 애니메이션 효과 추가 */
+				transition:
+					transform 0.25s ease,
+					box-shadow 0.25s ease;
+			}
+
+			/* 마우스 올렸을 때 효과 */
+			.card:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+			}
+
+			.card img {
+				width: 100%;
+				aspect-ratio: 400 / 266;
+				object-fit: contain;
+				background-color: #eee;
+				border-radius: 10px;
+				margin-bottom: 10px;
+				display: block;
+			}
+
+			.progress {
+				color: #2b6653;
+				font-weight: bold;
+				margin-bottom: 8px;
+				font-size: 15px;
+			}
+
+			.title {
+				font-size: 14px;
+				font-weight: 500;
+				margin-bottom: 12px;
+				color: #222;
+			}
+
+			.info-box {
+				display: flex;
+				gap: 8px;
+			}
+
+			.info-item {
+				font-size: 12px;
+				padding: 4px 8px;
+				background-color: #e6f3d6;
+				border-radius: 6px;
+				color: #2b2b2b;
+				font-weight: 500;
+			}
+
+			.no-data {
+				text-align: center;
+				font-size: 16px;
+				color: #888;
+				margin-top: 40px;
+			}
+			#slideBanner {
+				padding-top: 28px;
+				margin: auto;
+				width: 850px;
+				padding-bottom: 70px;
+			}
+
+			#mainCards {
+				box-sizing: content-box;
+				width: 955px;
+				padding-bottom: 70px;
+			}
+			@media (max-width: 1024px) {
+				.gallery-wrapper {
+					width: 95%;
+				}
+				.gallery-wrapper .btn-prev,
+				.gallery-wrapper .btn-next {
+					font-size: 22px;
+				}
+			}
+
+			@media (max-width: 750px) {
+				.gallery-wrapper {
+					border-width: 3px;
+				}
+				.gallery-wrapper .btn-prev,
+				.gallery-wrapper .btn-next {
+					font-size: 18px;
+				}
+				.ctrl-box .bullet {
+					width: 10px;
+					height: 10px;
+				}
+				.btn-ctrl {
+					font-size: 12px;
+					padding: 0 3px;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.gallery-wrapper {
+					padding: 5px;
+				}
+				.gallery-wrapper .btn-prev,
+				.gallery-wrapper .btn-next {
+					font-size: 16px;
+				}
+				.ctrl-box {
+					margin-top: 10px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					width: 630px;
+					margin: 70px auto auto auto;
+					padding: 0;
+				}
+				#slideBanner {
+					margin: auto;
+					width: 450px;
+					padding-bottom: 30px;
+					padding-top: 0;
+				}
+				#mainCards {
+					box-sizing: content-box;
+					margin: 0;
+					padding: 0 0 50px 0;
+					width: 630px;
+				}
+				.wrapper {
+					width: 630px;
+				}
+
+				.grid {
+					display: grid;
+					width: 630px;
+					grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+					gap: 20px;
+				}
+			}
+			@media (min-width: 1024px) {
+				#slideBanner {
+					margin: auto;
+					width: 850px;
+					padding-bottom: 70px;
+					padding-top: 0;
+				}
+				#mainCards {
+					padding: 0;
+					width: 945px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+				<div class="container">
+					<div class="container1" id="slideBanner">
+						<div id="slider01" class="gallery-wrapper">
+							<ul class="gallery-list">
+								<li>
+									<img src="../resources/main_banner01.png" alt="main_banner01" />
+								</li>
+								<li>
+									<img src="../resources/main_banner02.png" alt="main_banner02" />
+								</li>
+								<li>
+									<img src="../resources/main_banner03.png" alt="main_banner03" />
+								</li>
+								<li>
+									<img src="../resources/main_banner04.png" alt="main_banner04" />
+								</li>
+							</ul>
+							<a class="btn-prev" href="#none">◀</a>
+							<a class="btn-next" href="#none">▶</a>
+
+							<div class="ctrl-box">
+								<a href="#none" class="active"><i class="bullet">1</i></a>
+								<a href="#none"><i class="bullet">2</i></a>
+								<a href="#none"><i class="bullet">3</i></a>
+								<a href="#none"><i class="bullet">4</i></a>
+								<button type="button" class="btn-ctrl auto">정지</button>
+							</div>
+						</div>
+					</div>
+					<div class="wrapper">
+						<div class="container1" id="mainCards">
+							<div class="grid" id="productGrid">
+								<!-- 과일 카드 -->
+								<div class="card" data-category="fruit">
+									<a href="../product/product_detail_musket.html?productId='musket'">
+										<img src="../resources/musket.png" alt="샤인머스켓" />
+									</a>
+									<div class="progress">150% 달성</div>
+									<div class="title">[별빛영천포도밭] 달콤한 별빛샤인머스켓 (씨 없는 포도)</div>
+									<div class="info-box">
+										<div class="info-item">150만+</div>
+										<div class="info-item">30일 남음</div>
+									</div>
+								</div>
+								<div class="card" data-category="fruit">
+									<a href="../product/product_detail_apple.html?productId='apple'">
+										<img src="../resources/apple.png" alt="사과" />
+									</a>
+									<div class="progress">80% 달성</div>
+									<div class="title">
+										[영천햇살사과농장] 따뜻한 햇살 속에서 자란 당도 1등급 사과
+									</div>
+									<div class="info-box">
+										<div class="info-item">80만+</div>
+										<div class="info-item">27일 남음</div>
+									</div>
+								</div>
+								<div class="card" data-category="fruit">
+									<a href="#"><img src="../resources/grape.png" alt="이미지03" /></a>
+									<div class="progress">95% 달성</div>
+									<div class="title">[달콤한송산이야기] 송산햇살속 달콤샤인-프리미엄 선물박스</div>
+									<div class="info-box">
+										<div class="info-item">95만+</div>
+										<div class="info-item">9일 남음</div>
+									</div>
+								</div>
+								<div class="card" data-category="fruit">
+									<a href="#"><img src="../resources/tangerin.png" alt="이미지04" /></a>
+									<div class="progress">205% 달성</div>
+									<div class="title">[제주바람귤밭] 바람이 키운 달콤한 귤 이야기</div>
+									<div class="info-box">
+										<div class="info-item">205만+</div>
+										<div class="info-item">25일 남음</div>
+									</div>
+								</div>
+
+								<div class="card" data-category="fruit">
+									<a href="#"><img src="../resources/strawberry.png" alt="이미지05" /></a>
+									<div class="progress">135% 달성</div>
+									<div class="title">
+										[논산딸기뜰] 당도 가득, 사랑 가득 - 논산딸기뜰 프리미엄 딸기
+									</div>
+									<div class="info-box">
+										<div class="info-item">135만+</div>
+										<div class="info-item">15일 남음</div>
+									</div>
+								</div>
+								<div class="card" data-category="fruit">
+									<a href="#"><img src="../resources/melon.png" alt="이미지06" /></a>
+									<div class="progress">300% 달성</div>
+									<div class="title">[수신햇살멜론농장] 청정한 수신에서 자란 달콤한 멜론</div>
+									<div class="info-box">
+										<div class="info-item">300만+</div>
+										<div class="info-item">6일 남음</div>
+									</div>
+								</div>
+								<div class="card" data-category="fruit">
+									<a href="#"><img src="../resources/tomato.png" alt="이미지07" /></a>
+									<div class="progress">95% 달성</div>
+									<div class="title">[퇴촌토마토뜰] 퇴촌에서 갓 수확한 방울토마토</div>
+									<div class="info-box">
+										<div class="info-item">95만+</div>
+										<div class="info-item">13일 남음</div>
+									</div>
+								</div>
+								<div class="card" data-category="fruit">
+									<a href="#"><img src="../resources/persimmon.png" alt="이미지08" /></a>
+									<div class="progress">175% 달성</div>
+									<div class="title">[영천감이야기] 시간과 햇살이 만든 반시 한 알의 이야기</div>
+									<div class="info-box">
+										<div class="info-item">175만+</div>
+										<div class="info-item">34일 남음</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="no-data" id="noData" style="display: none">현재 상품이 없습니다.</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script>
+			var JUI = JUI || {};
+			!(function (param) {
+				var global = param.g,
+					$ = param.jQ;
+
+				JUI.slider = function (selector, options) {
+					var container1 = $(selector),
+						config = {
+							speed: 400,
+							isSelected: 'active',
+							autoPlay: true,
+							duration: 2500,
+						};
+
+					if (!container1.length) {
+						return;
+					}
+
+					var detect = {};
+
+					$.extend(config, options);
+
+					function setting() {
+						detect.$listBox = container1.find('.gallery-list');
+						detect.$lists = detect.$listBox.children('li');
+						detect.width = detect.$listBox.width();
+						detect.$indicate = container1.find('.ctrl-box a');
+						detect.view = '.gallery-list';
+						detect.indicate = '.ctrl-box a';
+						detect.prev = '.btn-prev';
+						detect.next = '.btn-next';
+						detect.ctrl = '.btn-ctrl';
+						detect.max = detect.$indicate.length - 1;
+						detect.min = 0;
+						detect.currentIndex = 0;
+						detect.selectedIndex = null;
+						detect.intervalId = null;
+						detect.$listBox.height(detect.$lists.eq(0).outerHeight());
+					}
+
+					setting();
+
+					function next(evt) {
+						detect.selectedIndex = detect.currentIndex + 1;
+						if (detect.selectedIndex > detect.max) {
+							detect.selectedIndex = 0;
+						}
+						toMove(detect.selectedIndex, detect.width);
+					}
+
+					function prev(evt) {
+						detect.selectedIndex = detect.currentIndex - 1;
+						if (detect.selectedIndex < detect.min) {
+							detect.selectedIndex = detect.max;
+						}
+						toMove(detect.selectedIndex, -detect.width);
+					}
+
+					function direction(selectedIndex) {
+						return detect.currentIndex < selectedIndex ? 'goToRight' : 'goToLeft';
+					}
+
+					function toMove(selectedIndex, offset) {
+						if (detect.selectedIndex == detect.currentIndex) return;
+						if (detect.$lists.is(':animated')) return;
+
+						// 새 이미지 보이게 하기
+						detect.$lists
+							.eq(selectedIndex)
+							.css({ left: offset, display: 'block' })
+							.addClass(config.isSelected)
+							.animate({ left: 0 }, config.speed);
+
+						// 인디케이터 업데이트
+						detect.$indicate.eq(detect.currentIndex).removeClass(config.isSelected);
+						detect.$indicate.eq(selectedIndex).addClass(config.isSelected);
+
+						// 이전 이미지 이동 후 감추기
+						detect.$lists
+							.eq(detect.currentIndex)
+							.animate({ left: -offset }, config.speed, function () {
+								afterMoving(selectedIndex);
+							});
+					}
+
+					function afterMoving(selectedIndex) {
+						detect.$lists
+							.eq(detect.currentIndex)
+							.removeClass(config.isSelected)
+							.css({ display: 'none' }); // 이전 이미지 감추기
+						detect.currentIndex = selectedIndex;
+						detect.$listBox.height(detect.$lists.eq(selectedIndex).outerHeight());
+					}
+
+					$(document)
+						.on('click.slide.indicate', detect.indicate, function () {
+							detect.selectedIndex = $(this).index();
+							var position = direction(detect.selectedIndex),
+								offset = null;
+
+							switch (position) {
+								case 'goToRight':
+									offset = detect.width;
+									break;
+								case 'goToLeft':
+									offset = -detect.width;
+							}
+							toMove(detect.selectedIndex, offset);
+						})
+						.on('click.slide.next', detect.next, next)
+						.on('click.slide.prev', detect.prev, prev)
+						.on('click.slide.ctrl', detect.ctrl, controller);
+
+					function startInterval() {
+						detect.intervalId = setInterval(autoMoving, config.duration);
+					}
+
+					function autoMoving() {
+						$(detect.next).trigger('click');
+					}
+
+					function controller() {
+						var $target = $(this);
+						if ($target.is('.auto')) {
+							clearInterval(detect.intervalId);
+							$target.removeClass('auto').text('재생');
+							config.autoPlay = false;
+						} else {
+							$target.addClass('auto').text('정지');
+							startInterval();
+							config.autoPlay = true;
+						}
+					}
+
+					$(detect.view + ',' + detect.indicate).on({
+						mouseenter: function () {
+							clearInterval(detect.intervalId);
+						},
+						mouseleave: function () {
+							if (!config.autoPlay) return;
+							startInterval();
+						},
+					});
+
+					if (config.autoPlay) {
+						startInterval();
+					}
+
+					// 슬라이더 제어 함수 반환
+					return {
+						resize: function () {
+							detect.width = detect.$listBox.width();
+							detect.$listBox.height(detect.$lists.eq(detect.currentIndex).outerHeight());
+						},
+					};
+				};
+			})({ g: window, jQ: window.jQuery });
+
+			$(function () {
+				const slider = JUI.slider('#slider01');
+				// 외부에서 슬라이더 높이 조정
+				slider.resize();
+			});
+		</script>
+	</body>
+</html>

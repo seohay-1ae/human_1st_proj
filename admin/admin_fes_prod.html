@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>축제 상품 연동</title>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+
+			.main-wrapper {
+				display: flex;
+				flex-direction: column;
+			}
+			.container {
+				width: 90%;
+				margin: 0;
+				background: #ffffff;
+				padding: 20px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+				border-radius: 10px;
+			}
+			.header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 20px;
+			}
+			.header h3 {
+				margin: 0;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				text-align: center;
+			}
+			th,
+			td {
+				border: 1px solid #ccc;
+				padding: 8px;
+				white-space: nowrap; /* 텍스트는 한 줄로 유지 */
+				overflow: hidden; /* 넘친 내용은 숨김 */
+				text-overflow: ellipsis; /* 넘친 부분은 "..."으로 표시 */
+			}
+			th {
+				background-color: #f1c40f;
+				color: #000;
+			}
+			.btn-approve,
+			.btn-setting {
+				background-color: red;
+				border: none;
+				padding: 5px 10px;
+				cursor: pointer;
+				font-weight: bold;
+				color: white;
+			}
+			input[type='checkbox'] {
+				transform: scale(1.2);
+			}
+			.table-container {
+				width: 100%;
+				overflow-x: auto;
+			}
+			@media (max-width: 750px) {
+				table {
+					font-size: 14px;
+				}
+			}
+			@media (max-width: 750px) {
+				.main-wrapper {
+					margin-left: 0; /* 모바일에서는 사이드바 밀리지 않도록 설정 */
+				}
+			}
+
+			@media (max-width: 1023px) and (min-width: 750px) {
+				.container {
+					width: 500px;
+					margin: auto;
+					margin-top: 120px;
+				}
+				.col-1 {
+					width: 25%;
+				}
+				.col-2 {
+					width: 10%;
+				}
+				.col-3 {
+					width: 10%;
+				}
+				.col-4 {
+					width: 10%;
+				}
+				.col-5 {
+					width: 7%;
+				}
+				.col-6 {
+					width: 10%;
+				}
+				.table-container {
+					overflow-x: scroll;
+				}
+			}
+
+			@media (min-width: 1024px) {
+				.container {
+					margin: auto;
+					margin-top: 120px;
+					width: 980px;
+				}
+				.col-1 {
+					width: 25%;
+				}
+				.col-2 {
+					width: 14%;
+				}
+				.col-3 {
+					width: 8%;
+				}
+				.col-4 {
+					width: 8%;
+				}
+				.col-5 {
+					width: 4%;
+				}
+				.col-6 {
+					width: 7%;
+				}
+			}
+
+			/* 💡 모달 스타일 */
+			#popup-overlay {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.5);
+				z-index: 999;
+			}
+
+			#popup-modal {
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: #fff;
+				padding: 20px;
+				z-index: 1000;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+				width: 80%;
+				max-width: 600px;
+			}
+		</style>
+	</head>
+	<body>
+		<main class="main-wrapper">
+			<!-- 사이드바 삽입 -->
+			<div id="sidebar-container"></div>
+
+			<div class="container">
+				<div class="header">
+					<h3>축제 상품 연동</h3>
+				</div>
+				<div class="table-container">
+					<table>
+						<thead>
+							<tr>
+								<th>축제명</th>
+								<th>장소</th>
+								<th>축제시작일</th>
+								<th>축제종료일</th>
+								<th>관리</th>
+								<th>업데이트일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>영천 과일 축제</td>
+								<td>경북 영천시</td>
+								<td>2025-10-20</td>
+								<td>2025-10-22</td>
+								<td><button class="btn-setting">설정</button></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>제주 축제 감귤 박람회</td>
+								<td>제주 서귀포시</td>
+								<td>2025-11-20</td>
+								<td>2025-11-24</td>
+								<td><button class="btn-setting">설정</button></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>천안 수신 멜론 축제</td>
+								<td>충남 천안시</td>
+								<td>2025-06-01</td>
+								<td>2025-06-02</td>
+								<td><button class="btn-setting">설정</button></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</main>
+
+		<!-- 💡 모달 오버레이 & 팝업 -->
+		<div id="popup-overlay"></div>
+		<div id="popup-modal">
+			<h3 style="margin-top: 0">상품 연동 관리</h3>
+			<table style="width: 100%; border-collapse: collapse; text-align: center">
+				<colgroup>
+					<!-- 첫 번째 열 (체크박스) -->
+					<col class="col-1" />
+					<!-- 두 번째 열 (상품id) -->
+					<col class="col-2" />
+					<!-- 세 번째 열 (상품명) -->
+					<col class="col-3" />
+					<!-- 네 번째 열 (카테고리) -->
+					<col class="col-4" />
+					<!-- 다섯 번째 열 (상품종류) -->
+					<col class="col-5" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="select-all" /></th>
+						<th>상품ID</th>
+						<th>상품명</th>
+						<th>카테고리</th>
+						<th>상품종류</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="checkbox" /></td>
+						<td>PD001-A</td>
+						<td>달콤한 별빛 샤인머스켓</td>
+						<td>과일</td>
+						<td>샤인머스켓</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" /></td>
+						<td>PD002-A</td>
+						<td>따뜻한 햇살속에서 자란 당도 1등급 사과</td>
+						<td>과일</td>
+						<td>사과</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" /></td>
+						<td>PD003-B</td>
+						<td>바람이 키운 달콤한 귤 이야기</td>
+						<td>과일</td>
+						<td>귤</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" /></td>
+						<td>PD004-A</td>
+						<td>청정한 수신에서 자란 달콤한 멜론</td>
+						<td>과일</td>
+						<td>멜론</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="text-align: right; margin-top: 10px">
+				<button id="connect-products" style="padding: 5px 10px; margin-right: 5px">연동하기</button>
+				<button id="close-popup" style="padding: 5px 10px">닫기</button>
+			</div>
+		</div>
+
+		<script src="./admin_sidebar.js"></script>
+		<script>
+			let festivalProductStates = JSON.parse(localStorage.getItem('festivalProductStates')) || {}; // 축제별 체크박스 상태 저장 객체
+
+			$(document).ready(function () {
+				$('table tbody tr').each(function () {
+					const festivalName = $(this).find('td').eq(0).text();
+					const saved = festivalProductStates[festivalName];
+					if (saved && saved.updatedAt) {
+						$(this).find('td').last().text(saved.updatedAt);
+					}
+				});
+			});
+
+			let currentRow; // 현재 행
+
+			// 설정 버튼 클릭 시 모달 열기
+			$(document).on('click', '.btn-setting', function () {
+				console.log('설정 버튼 클릭됨'); // 이거 넣어보세요!
+				currentRow = $(this).closest('tr'); // 현재 클릭한 행 저장
+				const festivalName = currentRow.find('td').eq(0).text(); // 축제명 가져오기 (첫 번째 열)
+
+				// 해당 축제의 체크박스 상태 불러오기 (없으면 빈 배열)
+				const saved = festivalProductStates[festivalName] || {
+					selectedProducts: [],
+					updatedAt: '',
+				};
+				const previouslySelected = saved.selectedProducts || [];
+				// 체크박스 상태 설정
+				$('#popup-modal tbody input[type="checkbox"]').each(function () {
+					// 현재 체크된 체크박스가 포함된 행을 찾아 두번째 셀을(상품id) 선택하고, 그 셀의 텍스트 내용을 가져옴
+					const productId = $(this).closest('tr').find('td').eq(1).text();
+					$(this).prop('checked', previouslySelected.includes(productId)); // 해당 상품ID가 체크되었으면 체크박스 선택 (체크박스 유지 로직)
+				});
+
+				// 모달 보이기
+				$('#popup-overlay').show();
+				$('#popup-modal').show();
+			});
+
+			// 모달 닫기 (오버레이 또는 닫기 버튼)
+			$('#close-popup, #popup-overlay').on('click', function () {
+				$('#popup-modal').hide();
+				$('#popup-overlay').hide();
+			});
+
+			// 전체 선택 체크박스
+			$('#select-all').on('change', function () {
+				const isChecked = $(this).is(':checked');
+				$('#popup-modal tbody input[type="checkbox"]').prop('checked', isChecked);
+			});
+
+			// 연동하기 버튼 클릭 시
+			$('#connect-products').on('click', function () {
+				// 체크된 상품ID 배열 생성
+				const selectedProducts = [];
+				$('#popup-modal tbody input[type="checkbox"]:checked').each(function () {
+					const productId = $(this).closest('tr').find('td').eq(1).text();
+					selectedProducts.push(productId);
+				});
+
+				// KST 기준 오늘 날짜 계산
+				const today = new Date();
+				today.setHours(today.getHours() + 9);
+				const formattedDate = today.toISOString().split('T')[0];
+
+				// 축제명 (모달에 연결된 축제명)
+				const festivalName = currentRow.find('td').eq(0).text();
+				// 해당 축제의 체크 상태 저장
+				festivalProductStates[festivalName] = {
+					selectedProducts,
+					updatedAt: formattedDate,
+				};
+				localStorage.setItem('festivalProductStates', JSON.stringify(festivalProductStates));
+
+				// 업데이트일 컬럼 변경
+				currentRow.find('td').last().text(formattedDate);
+
+				alert('설정이 완료되었습니다.');
+
+				// 모달 닫기
+				$('#popup-modal').hide();
+				$('#popup-overlay').hide();
+			});
+		</script>
+	</body>
+</html>

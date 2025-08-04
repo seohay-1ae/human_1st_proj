@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>공지사항(관리자) 글쓰기</title>
+		<style>
+			body {
+				background-color: #f4f4f4;
+				padding: 20px;
+			}
+			.container {
+				margin: auto;
+				background: white;
+				padding: 20px;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				margin-top: 100px;
+			}
+			input,
+			textarea {
+				width: 95%;
+				padding: 10px;
+				margin: 10px 0;
+				border-radius: 5px;
+				border: 1px solid #ccc;
+				font-size: 1rem;
+			}
+			button {
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 8px;
+				font-weight: bold;
+				cursor: pointer;
+				background-color: #0a8b11;
+			}
+			.back-button {
+				color: white;
+				padding: 10px 20px;
+				border-radius: 8px;
+				text-decoration: none;
+				font-weight: bold;
+				background-color: #0a8b11;
+				font-size: 0.9rem;
+				display: inline-block;
+			}
+			.buttons {
+				display: flex;
+			}
+			@media (min-width: 1024px) {
+				.container {
+					width: 980px;
+				}
+				.buttons {
+					gap: 740px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					width: 600px;
+				}
+				.buttons {
+					gap: 375px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2>공지사항 작성</h2>
+			<input type="text" id="title" placeholder="제목" />
+			<textarea id="content" rows="5" placeholder="내용"></textarea>
+			<div class="buttons">
+				<a href="./admin_notice.html" class="back-button">공지사항 목록으로</a>
+				<button id="submit-notice" style="font-size: 14.4px">등록</button>
+			</div>
+		</div>
+
+		<script>
+			$('#submit-notice').click(function () {
+				const title = $('#title').val().trim();
+				const content = $('#content').val().trim();
+				const today = new Date();
+				today.setHours(today.getHours() + 9); // UTC 기준 시간에 9시간 더해서 한국 시간으로 변환
+				const formattedDate = today.toISOString().split('T')[0]; // 날짜 부분만 추출 (yyyy-mm-dd)
+
+				if (!title || !content) {
+					alert('모든 항목을 입력해주세요.');
+					return;
+				}
+
+				// 기존 공지사항 목록을 불러오기
+				const notices = JSON.parse(localStorage.getItem('notices')) || [];
+
+				// 순차적인 'no' 값을 추가 (현재 저장된 공지사항의 길이를 기준으로 +1)
+				const newNotice = {
+					no: notices.length + 1, // 현재 저장된 공지사항 수 + 1
+					title: title,
+					content: content,
+					date: formattedDate,
+				};
+
+				// 공지사항 목록에 새 공지 추가
+				notices.push(newNotice);
+				localStorage.setItem('notices', JSON.stringify(notices));
+
+				alert('공지사항이 등록되었습니다.');
+				window.location.href = './admin_notice.html'; // 공지사항 목록으로 이동
+			});
+		</script>
+	</body>
+</html>

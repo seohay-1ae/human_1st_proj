@@ -1,0 +1,64 @@
+<!-- sidebar.html -->
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style>
+			/* sidebar.html에 포함된 CSS */
+			.sidebar {
+				display: none;
+				min-width: 180px; /* 너무 좁아지지 않게 최소값 설정 */
+				max-width: 600px; /* 너무 넓어지는 것도 방지 가능 */
+				background-color: #b9b9b9;
+				color: white;
+				position: static;
+				height: 100%;
+				padding: 100px 10px;
+				z-index: 1;
+			}
+
+			.sidebar ul {
+				list-style-type: none;
+				padding: 0;
+			}
+
+			.sidebar ul li {
+				margin: 20px 0;
+			}
+
+			.sidebar ul li a,
+			.sidebar ul li span {
+				color: rgb(0, 0, 0);
+				text-decoration: none;
+				padding: 10px;
+				display: block;
+				transition: background-color 0.3s;
+				font-size: 1.3rem;
+			}
+
+			/* .sidebar ul li a:hover {
+				background-color: #555;
+			} */
+
+			/* PC 화면 크기에서 사이드바 표시 */
+			@media (min-width: 1024px) {
+				.sidebar {
+					display: block;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="sidebar">
+			<ul>
+				<li><span class="proj_info">프로젝트 정보</span></li>
+				<li><span class="proj_story">프로젝트 스토리</span></li>
+				<li><span class="proj_reward">리워드 추가</span></li>
+				<li><span class="proj_maker">메이커 정보</span></li>
+				<li><span class="proj_director">대표자 정보</span></li>
+				<li><span class="proj_policy">정책</span></li>
+			</ul>
+		</div>
+	</body>
+</html>

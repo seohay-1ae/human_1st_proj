@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>notice test</title>
+		<style>
+			body {
+				background-color: #f9f9f9;
+			}
+
+			.container {
+				background-color: #ffffff;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				padding: 20px;
+			}
+
+			h2 {
+				margin-top: 0;
+				color: #333333;
+			}
+
+			.date {
+				color: #888888;
+				font-size: 14px;
+				margin-bottom: 20px;
+			}
+
+			.content {
+				color: #444;
+			}
+
+			.back-btn {
+				display: inline-block;
+				margin-top: 30px;
+				padding: 10px 20px;
+				background-color: #0a8b11;
+				color: white;
+				text-decoration: none;
+				border-radius: 8px;
+				transition: background-color 0.3s;
+			}
+
+			.back-btn:hover {
+				background-color: #696b6a;
+			}
+			@media (min-width: 1024px) {
+				.container {
+					width: 910px;
+					margin-top: 60px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					width: 570px;
+
+					margin-top: 60px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="container">
+					<h2>홈페이지 리뉴얼 안내</h2>
+					<div class="date">게시일: 2025년 3월 15일</div>
+					<div class="content">
+						안녕하세요.<br /><br />
+						홈페이지 리뉴얼 안내는 다음과 같습니다.<br /><br />
+						관리자의 부재로 이 홈페이지는 자동으로 폭파합니다
+					</div>
+					<a href="#" class="back-btn" onclick="goBack()">← 목록으로</a>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+		<script>
+			function goBack() {
+				const storedUser = localStorage.getItem('loggedInUser');
+				if (storedUser) {
+					const user = JSON.parse(storedUser);
+					if (user.id === 'admin') {
+						location.href = '../admin/admin_notice.html';
+						return;
+					}
+				}
+				location.href = './notice.html';
+			}
+		</script>
+	</body>
+</html>

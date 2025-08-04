@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>과일 펀딩 리스트</title>
+		<style>
+			.wrapper {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.tabs {
+				display: flex;
+				gap: 10px;
+				margin-bottom: 30px;
+				justify-content: flex-start;
+			}
+
+			.tab {
+				padding: 5px 17px;
+				border-radius: 10px;
+				background-color: #e0e0d9;
+				font-weight: bold;
+				cursor: pointer;
+			}
+
+			.tab.active {
+				background-color: #2b6653;
+				color: white;
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+				gap: 20px;
+			}
+
+			.card {
+				background-color: #fff6e4;
+				padding: 15px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+				text-align: left;
+				/* 애니메이션 효과 추가 */
+				transition:
+					transform 0.25s ease,
+					box-shadow 0.25s ease;
+			}
+			/* 마우스 올렸을 때 효과 */
+			.card:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+			}
+
+			.card img {
+				width: 100%;
+				aspect-ratio: 400 / 266;
+				object-fit: contain;
+				background-color: #eee;
+				border-radius: 10px;
+				margin-bottom: 10px;
+				display: block;
+			}
+
+			.progress {
+				color: #2b6653;
+				font-weight: bold;
+				margin-bottom: 8px;
+				font-size: 15px;
+			}
+
+			.title {
+				font-size: 14px;
+				font-weight: 500;
+				margin-bottom: 12px;
+				color: #222;
+			}
+
+			.info-box {
+				display: flex;
+				gap: 8px;
+			}
+
+			.info-item {
+				font-size: 12px;
+				padding: 4px 8px;
+				background-color: #e6f3d6;
+				border-radius: 6px;
+				color: #2b2b2b;
+				font-weight: 500;
+			}
+			.productList {
+				font-size: 30px;
+				font-weight: 700;
+				margin-bottom: 20px;
+				border-bottom: 2px solid #0000002f;
+				padding-bottom: 10px;
+			}
+
+			.no-data {
+				text-align: center;
+				font-size: 16px;
+				color: #888;
+				margin-top: 40px;
+			}
+			/* 페이징 css추가 */
+			.pagination {
+				margin-top: 40px;
+				text-align: center;
+			}
+
+			.page-btn {
+				background-color: #e5e7eb;
+				color: #111827;
+				border: none;
+				padding: 8px 16px;
+				margin: 0 4px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: 600;
+				transition: background-color 0.3s;
+			}
+
+			.page-btn:hover {
+				background-color: #2b6653;
+				color: #fff;
+			}
+			.page-btn.active {
+				background-color: #2b6653;
+				color: white;
+			}
+			@media (max-width: 750px) {
+				.tabs {
+					justify-content: center;
+					flex-wrap: wrap;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.grid {
+					display: grid;
+					grid-template-columns: repeat(auto-fill, minmax(375px, 1fr));
+					gap: 40px;
+				}
+				.container {
+					width: 600px;
+					margin-bottom: 60px;
+				}
+			}
+			@media (min-width: 1024px) {
+				.container {
+					width: 950px;
+				}
+				.grid {
+					display: grid;
+					grid-template-columns: repeat(auto-fill, minmax(375px, 1fr));
+					gap: 30px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+
+				<div class="wrapper">
+					<div class="container">
+						<div class="productList">상품 리스트</div>
+						<div class="tabs">
+							<div class="tab" data-category="all">전체</div>
+							<div class="tab active" data-category="fruit">과일</div>
+							<div class="tab" data-category="vegetable">야채</div>
+							<div class="tab" data-category="health">건강식품</div>
+						</div>
+
+						<div class="grid" id="productGrid">
+							<!-- 과일 카드 -->
+							<div class="card" data-category="fruit">
+								<a href="../product/product_detail_musket.html?productId='musket'">
+									<img src="../resources/musket.png" alt="이미지01" />
+								</a>
+								<div class="progress">150% 달성</div>
+								<div class="title">[별빛영천포도밭] 달콤한 별빛샤인머스켓 (씨 없는 포도)</div>
+								<div class="info-box">
+									<div class="info-item">150만+</div>
+									<div class="info-item">30일 남음</div>
+								</div>
+							</div>
+							<div class="card" data-category="fruit">
+								<a href="../product/product_detail_apple.html?productId='apple'">
+									<img src="../resources/apple.png" alt="이미지02" />
+								</a>
+								<div class="progress">80% 달성</div>
+								<div class="title">[영천햇살사과농장] 따뜻한 햇살 속에서 자란 당도 1등급 사과</div>
+								<div class="info-box">
+									<div class="info-item">80만+</div>
+									<div class="info-item">27일 남음</div>
+								</div>
+							</div>
+							<div class="card" data-category="fruit">
+								<a href="#"><img src="../resources/grape.png" alt="이미지03" /></a>
+								<div class="progress">95% 달성</div>
+								<div class="title">[달콤한송산이야기] 송산햇살속 달콤샤인-프리미엄 선물박스</div>
+								<div class="info-box">
+									<div class="info-item">95만+</div>
+									<div class="info-item">9일 남음</div>
+								</div>
+							</div>
+							<div class="card" data-category="fruit">
+								<a href="#"><img src="../resources/tangerin.png" alt="이미지04" /></a>
+								<div class="progress">205% 달성</div>
+								<div class="title">[제주바람귤밭] 바람이 키운 달콤한 귤 이야기</div>
+								<div class="info-box">
+									<div class="info-item">205만+</div>
+									<div class="info-item">25일 남음</div>
+								</div>
+							</div>
+							<div class="card" data-category="fruit">
+								<a href="#"><img src="../resources/strawberry.png" alt="이미지05" /></a>
+								<div class="progress">135% 달성</div>
+								<div class="title">
+									[논산딸기뜰] 당도 가득, 사랑 가득 - 논산딸기뜰 프리미엄 딸기
+								</div>
+								<div class="info-box">
+									<div class="info-item">135만+</div>
+									<div class="info-item">15일 남음</div>
+								</div>
+							</div>
+							<div class="card" data-category="fruit">
+								<a href="#"><img src="../resources/melon.png" alt="이미지06" /></a>
+								<div class="progress">300% 달성</div>
+								<div class="title">[수신햇살멜론농장] 청정한 수신에서 자란 달콤한 멜론</div>
+								<div class="info-box">
+									<div class="info-item">300만+</div>
+									<div class="info-item">6일 남음</div>
+								</div>
+							</div>
+							<div class="card" data-category="fruit">
+								<a href="#"><img src="../resources/tomato.png" alt="이미지07" /></a>
+								<div class="progress">95% 달성</div>
+								<div class="title">[퇴촌토마토뜰] 퇴촌에서 갓 수확한 방울토마토</div>
+								<div class="info-box">
+									<div class="info-item">95만+</div>
+									<div class="info-item">13일 남음</div>
+								</div>
+							</div>
+							<div class="card" data-category="fruit">
+								<a href="#"><img src="../resources/persimmon.png" alt="이미지08" /></a>
+								<div class="progress">175% 달성</div>
+								<div class="title">[영천감이야기] 시간과 햇살이 만든 반시 한 알의 이야기</div>
+								<div class="info-box">
+									<div class="info-item">175만+</div>
+									<div class="info-item">34일 남음</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="no-data" id="noData" style="display: none">현재 상품이 없습니다.</div>
+					</div>
+					<!-- 페이징 버튼 -->
+					<div class="pagination">
+						<button class="page-btn" data-page="1">1</button>
+						<button class="page-btn" data-page="2">2</button>
+						<button class="page-btn" data-page="3">3</button>
+						<button class="page-btn" data-page="4">4</button>
+						<button class="page-btn" data-page="5">5</button>
+					</div>
+				</div>
+			</main>
+		</div>
+		<script>
+			const tabs = document.querySelectorAll('.tab');
+			const allCards = document.querySelectorAll('.card');
+			const noData = document.getElementById('noData');
+			let currentCategory = 'fruit'; // 기본값
+
+			const itemsPerPage = 4;
+			let filteredCards = [];
+
+			function showPage(page) {
+				filteredCards.forEach((card, index) => {
+					card.style.display =
+						index >= (page - 1) * itemsPerPage && index < page * itemsPerPage ? 'block' : 'none';
+				});
+			}
+
+			function updatePaginationButtons() {
+				const pagination = document.querySelector('.pagination');
+				pagination.innerHTML = '';
+
+				const totalPages = 5;
+
+				for (let i = 1; i <= totalPages; i++) {
+					const btn = document.createElement('button');
+					btn.classList.add('page-btn');
+					btn.textContent = i;
+					btn.dataset.page = i;
+
+					// 1페이지는 기본 active 처리
+					if (i === 1) {
+						btn.classList.add('active');
+					}
+
+					btn.addEventListener('click', () => {
+						showPage(i);
+
+						// 버튼 스타일 초기화 후 현재 버튼 활성화
+						document.querySelectorAll('.page-btn').forEach((b) => b.classList.remove('active'));
+						btn.classList.add('active');
+					});
+
+					pagination.appendChild(btn);
+				}
+			}
+
+			function filterCards(category) {
+				currentCategory = category;
+				filteredCards = [];
+
+				let count = 0;
+				allCards.forEach((card) => {
+					const cardCategory = card.getAttribute('data-category');
+					const show = category === 'all' || cardCategory === category;
+
+					if (show) {
+						card.style.display = 'block';
+						filteredCards.push(card);
+						count++;
+					} else {
+						card.style.display = 'none';
+					}
+				});
+
+				noData.style.display = count === 0 ? 'block' : 'none';
+
+				updatePaginationButtons();
+				showPage(1); // 페이지 초기화
+			}
+
+			tabs.forEach((tab) => {
+				tab.addEventListener('click', () => {
+					const category = tab.getAttribute('data-category');
+
+					tabs.forEach((t) => t.classList.remove('active'));
+					tab.classList.add('active');
+
+					filterCards(category);
+				});
+			});
+
+			// 초기 실행 (과일 탭 기본 표시)
+			document.querySelector('.tab.active').click();
+
+			$('.page-btn').on('click', function () {
+				const page = parseInt($(this).data('page'));
+
+				// 버튼 스타일 초기화 후 현재 버튼 활성화
+				$('.page-btn').removeClass('active');
+				$(this).addClass('active');
+
+				showPage(page);
+			});
+
+			// 초기 첫 페이지에 active 클래스 설정
+			$('.page-btn[data-page="1"]').addClass('active');
+		</script>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 (바디 맨 아래에 삽입)-->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+	</body>
+</html>

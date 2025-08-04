@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>공지사항</title>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<link rel="stylesheet" href="../common/styles.css" />
+		<style>
+			body {
+				background-color: #f9f9f9;
+			}
+			.container {
+				width: 80%;
+
+				background: #ffffff;
+				padding: 20px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+				border-radius: 10px;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				text-align: left;
+			}
+			th,
+			td {
+				padding: 12px;
+				font-size: 1rem;
+				border-bottom: 1px solid #dddddd;
+			}
+			th {
+				background-color: #f4f4f4;
+			}
+			tr:hover {
+				background-color: #f9f9f9;
+			}
+			a {
+				text-decoration: none;
+				color: #333333;
+			}
+			@media (min-width: 1024px) {
+				.container {
+					width: 910px;
+					margin-top: 60px;
+				}
+			}
+			@media (min-width: 750px) and (max-width: 1023px) {
+				.container {
+					margin-top: 60px;
+					width: 560px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<main class="page-content">
+				<!-- 본문 내용 -->
+				<div class="wrapper">
+					<div class="container">
+						<h3>공지사항</h3>
+						<table>
+							<thead>
+								<tr>
+									<th style="width: 10%">NO.</th>
+									<th>제목</th>
+									<th style="width: 20%">게시일</th>
+								</tr>
+							</thead>
+							<tbody id="notice-list">
+								<!-- 기존 공지사항은 고정된 데이터로 두고, 새로운 데이터는 여기에 추가될 것입니다. -->
+								<tr>
+									<td>1</td>
+									<td><a href="./notice1.html">홈페이지 리뉴얼 안내</a></td>
+									<td>2025-03-15</td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>홈페이지 오류 안내</td>
+									<td>2025-04-10</td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>긴급 서버 점검 공지</td>
+									<td>2025-04-16</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</main>
+		</div>
+		<!-- 공통 헤더 및 푸터 스크립트 로드 -->
+		<script defer src="../common/header3.js"></script>
+		<script defer src="../common/footer2.js"></script>
+
+		<script>
+			// localStorage에서 공지사항 불러오기
+			const notices = JSON.parse(localStorage.getItem('notices')) || [];
+			const noticeList = document.getElementById('notice-list');
+
+			// 기존 공지사항 데이터 뒤에 새로운 공지사항을 추가
+			notices.forEach((notice) => {
+				const row = document.createElement('tr');
+				row.innerHTML = `
+        <td>${notice.no + 3}</td>  <!-- no 값 출력 -->
+        <td>${notice.title}</a></td>
+				<td>${notice.date}</a></td>
+    `;
+				noticeList.appendChild(row);
+			});
+		</script>
+	</body>
+</html>

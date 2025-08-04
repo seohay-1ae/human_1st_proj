@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>sidemen 로그인</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background-color: #f9f9f9;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+			.main {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 60px 20px;
+			}
+			.login-container {
+				background-color: #ffffff;
+				padding: 30px;
+				border-radius: 10px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+				width: 100%;
+				max-width: 380px;
+				box-sizing: border-box;
+			}
+			/* 로그인 큰 글씨 */
+			.login-container h2 {
+				margin-bottom: 20px;
+				font-size: 20px;
+				text-align: center;
+				color: #000000;
+			}
+			.sns-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 5px;
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 10px;
+				border-radius: 6px;
+				font-size: 14px;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			.sns-google {
+				background-color: white;
+				border: 1px solid #cccccc;
+				color: #333;
+			}
+			.sns-Kakao {
+				background-color: #fee500;
+				border: none;
+				color: #000000;
+			}
+			.sns-button img {
+				height: 20px;
+				width: 20px;
+			}
+			/* 아이디 비밀번호 */
+			.login-container input {
+				width: 100%;
+				padding: 10px 12px;
+				margin: 8px 0;
+				border: 1px solid #cccccc;
+				border-radius: 6px;
+				font-size: 14px;
+				box-sizing: border-box;
+			}
+			/* 아이디 비밀번호 제출버튼 */
+			.login-container button[type='submit'] {
+				width: 100%;
+				background-color: #000000;
+				color: white;
+				border: none;
+				padding: 10px;
+				border-radius: 6px;
+				font-size: 15px;
+				margin-top: 12px;
+				cursor: pointer;
+			}
+			/* 회원가입, 아이디비번찾기 */
+			.login-container .links {
+				margin-top: 15px;
+				text-align: center;
+				font-size: 13px;
+			}
+			.login-container .links a {
+				color: #000000;
+				margin: 0 3px;
+			}
+			/* 팝업 스타일 - display설정*/
+			.popup-background {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.4);
+				justify-content: center;
+				align-items: center;
+			}
+			.popup-box {
+				background-color: #ffffff;
+				padding: 0;
+				border-radius: 6px;
+				text-align: center;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+				padding: 0 1rem;
+			}
+			.popup-box p {
+				font-size: 15px;
+				margin-bottom: 20px;
+				color: #333333;
+			}
+			.popup-box button {
+				background-color: #000000;
+				color: #ffffff;
+				border: none;
+				border-radius: 6px;
+				padding: 8px 20px;
+				cursor: pointer;
+				margin-bottom: 20px;
+				font-size: 14px;
+			}
+			.sns-popup-background {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5);
+				justify-content: center;
+				align-items: center;
+				z-index: 9999;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<div class="login-container">
+				<h2>로그인</h2>
+
+				<!-- SNS 로그인 버튼 -->
+				<button type="button" class="sns-button sns-google">
+					<img
+						src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
+						alt="Google 아이콘"
+					/>
+					Google로 시작하기
+				</button>
+				<button type="button" class="sns-button sns-Kakao">
+					<img
+						src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg"
+						alt="Kakao 아이콘"
+					/>
+					카카오톡 시작하기
+				</button>
+
+				<div style="text-align: center; margin: 20px 0; color: #666666">또는</div>
+
+				<!-- 로그인 폼 -->
+				<form id="login-form">
+					<input type="text" id="idInput" placeholder="아이디" required />
+					<input type="password" id="pwInput" placeholder="비밀번호" required />
+					<button type="submit">로그인</button>
+				</form>
+
+				<!-- 회원가입과 아이디 비밀번호 찾기 -->
+				<div class="links">
+					<a href="./join.html">회원가입</a> |
+					<a href="./find.html">아이디|비밀번호 찾기</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 팝업 창 -->
+		<div class="popup-background" id="popup">
+			<div class="popup-box">
+				<p id="popup-message">로그인 결과</p>
+				<button onclick="goToMain()">확인</button>
+			</div>
+		</div>
+		<!-- SNS 이미지 클릭 시 나오는 팝업 -->
+		<div class="sns-popup-background" id="snsPopup">
+			<div class="popup-box">
+				<img id="sns-popup-img" src="" alt="SNS 팝업 이미지" style="width: 25rem; height: 30rem" />
+				<p id="sns-popup-text">SNS 안내 문구</p>
+				<button onclick="closeSnsPopup()" style="margin-bottom: 0.5rem">닫기</button>
+			</div>
+		</div>
+
+		<script>
+			let loginSuccess = false;
+			let isAdminUser = false;
+
+			const form = document.getElementById('login-form');
+			const popup = document.getElementById('popup');
+			const popupMessage = document.getElementById('popup-message');
+
+			form.addEventListener('submit', function (e) {
+				e.preventDefault();
+				// 사용자의 아이디와 비밀번호 값 가져오기
+				const idValue = document.getElementById('idInput').value.trim();
+				const pwValue = document.getElementById('pwInput').value;
+
+				// localStorage에 저장된 usersList 정보를 가져와 userData로 재정의한다. []는 값이 없으면 반환
+				const userData = JSON.parse(localStorage.getItem('userList')) || [];
+
+				// 로그인 정보 일치 여부 확인
+				//user => 은 배열 안의 각각의 사용 객체 의미
+				//user.id===idValue 사용자가 입력한 아이디(idValue)가 userData의 user(배열객체)의 id와 같은지
+				const matchedUser = userData.find(
+					(user) => user.id === idValue && user.password === pwValue,
+				);
+
+				//로그인 정보가 일치하다면
+				if (matchedUser) {
+					popupMessage.textContent = `${matchedUser.name || '사용자'}님 환영합니다!`;
+					localStorage.setItem('loggedInUser', JSON.stringify(matchedUser));
+					loginSuccess = true;
+					isAdminUser = matchedUser.id === 'admin';
+				} else {
+					//로그인 정보 불일치
+					popupMessage.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.';
+				}
+				popup.style.display = 'flex';
+			});
+
+			function goToMain() {
+				popup.style.display = 'none';
+
+				if (loginSuccess) {
+					window.location.href = isAdminUser
+						? '../admin/admin_notice.html'
+						: '../mainpage/main.html';
+				}
+			}
+			// SNS 팝업 관련 DOM
+			const snsPopup = document.getElementById('snsPopup');
+			const snsPopupImg = document.getElementById('sns-popup-img');
+			const snsPopupText = document.getElementById('sns-popup-text');
+
+			function openSnsPopup(imageUrl, message) {
+				snsPopupImg.src = imageUrl;
+				snsPopupText.textContent = message;
+				snsPopup.style.display = 'flex';
+			}
+
+			function closeSnsPopup() {
+				snsPopup.style.display = 'none';
+			}
+
+			// SNS 이미지 클릭 시 각각 다른 이미지와 텍스트
+			document.querySelector('.sns-google').addEventListener('click', (e) => {
+				openSnsPopup('../resources/google-login.png');
+			});
+
+			document.querySelector('.sns-Kakao').addEventListener('click', (e) => {
+				openSnsPopup('../resources/kakao-login.jpg');
+			});
+		</script>
+	</body>
+</html>

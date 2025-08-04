@@ -1,233 +1,51 @@
-# 📦 Team Project Starter
+# Sidemenu
 
-이 저장소는 **VS Code 기반의 팀 프로젝트 개발 환경**을 빠르게 설정하기 위한 기본 설정을 포함합니다.  
-Prettier와 ESLint를 이용한 **통일된 코드 스타일**, 추천 확장, 자동 포맷 기능이 모두 준비되어 있어요.
+## 프로젝트 개요
 
----
+1차 프로젝트 주제: 커뮤니티 기반 크라우드 펀딩 웹사이트 개발
 
-## 🧑‍💻 팀원 작업 가이드
-
-### ✅ 기본 작업 순서 (숙지)
-
-1. Node.js 설치 확인
-2. 저장소 클론 및 VS Code로 열기
-3. `npm install` 실행
-4. 코드 저장 시 자동 포맷 및 ESLint 적용
-5. 브랜치 생성 후 기능 개발 시작
-
-> VS Code로 열면 추천 확장은 자동 설치됩니다.  
-> 저장만 해도 Prettier 포맷 + ESLint 자동 수정 적용!
+**Sidemenu**는 커뮤니티 기반 크라우드 펀딩 웹사이트로,  
+특히 농식품 분야에 특화된 펀딩 플랫폼 개발을 목표로 하는  
+프론트엔드 온리 프로젝트입니다.
 
 ---
 
-## 🚀 자동세팅 사용법 (최초 1회) ⚠️⚠️⚠️ (따라하세요)
+### 프로젝트 기간
 
-### 1. Node.js 설치 확인
-
-**CMD**에서 다음 명령어를 입력:
-
-```bash
-node -v
-```
-
-버전이 출력되지 않으면 Node.js 공식 사이트에서 설치하세요.  
-**LTS(Long-Term Support)** 버전을 선택하면 안정적입니다.  
-설치 후 다시 명령어 입력하여 버전 출력되는지 확인.
+2025년 4월 10일 ~ 2025년 4월 24일
 
 ---
 
-### 2. 저장소 클론
+### 사용 언어 및 기술 스택
 
-아래 명령어를 **CMD**에서 한 줄씩 입력하세요 **⚠️(띄어쓰기 주의)**
-
-```bash
-d:
-mkdir sidemenu
-cd sidemenu
-git clone https://github.com/seohay-1ae/sidemenu.git .
-code .
-```
-
-> `.`은 현재 디렉토리에 저장소를 복제하겠다는 의미입니다.  
-> `code .` 후 엔터를 치면 `d:\sidemenu` 루트로 **자동으로 VSCode가 실행됩니다.**  
-> **"이 워크스페이스에서 추천하는 확장 기능이 있습니다."**라는 팝업이 뜨면  
-> **⚠️⚠️ 설치❌, 닫기❌ 일단 두고 다음 단계 진행**
+- HTML  
+- CSS  
+- JavaScript (프론트엔드 전용)
 
 ---
 
-### 3. 의존 패키지 설치
+### 협업 툴
 
-VS Code에서 ESLint, Prettier, 자동 포맷 등이 제대로 작동하려면 아래 설정이 필요해요.
-
-✅ 실행 방법
-
-1. 자동으로 실행된 VSCode에서 `Ctrl + ~` (터미널 열기)
-2. 아래 명령어 입력
-
-```bash
-npm install
-```
-
-> ⚠️ 루트 폴더(sidemenu)에 `package.json` 파일이 생성되었는지 확인하세요.
+- Jandi  
+- Git  
+- GitHub  
+- Discord
 
 ---
 
-### 4. 확장 프로그램 설치
+### 개발 도구
 
-아까 떴던 팝업  
-**"이 워크스페이스에서 추천하는 확장 기능이 있습니다."**
-
-✅ **"모두 설치"** 를 클릭하세요.  
-이후 **파일 저장만 해도 자동 포맷/ESLint 수정**이 적용됩니다!
+- VSCode
 
 ---
 
-## 💻 개발 환경 자동 설정 (세팅값 설명)
+### 구현 목표
 
-### 📂 주요 설정 파일
-
-| 파일명                    | 설명                                        |
-| ------------------------- | ------------------------------------------- |
-| `.vscode/settings.json`   | 저장 시 자동 포맷, ESLint 연동 설정         |
-| `.vscode/extensions.json` | 추천 확장 목록                              |
-| `.prettierrc`             | 코드 포맷 스타일 설정                       |
-| `.eslintrc.js`            | 코드 검사 및 규칙 설정 (Prettier 연동 포함) |
+- 농식품 분야에 특화된 크라우드 펀딩 플랫폼 개발
+- 프론트엔드 구현과 사용자 인터페이스(UI) 개선에 집중
+- 프론트엔드 only 프로젝트지만, 백엔드 없이도 로컬스토리지를 활용해 프론트엔드 단에서의 데이터 흐름과 저장 구조를 경험
 
 ---
 
-### `.vscode/settings.json`
-
-```json
-{
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
-  },
-  "editor.tabSize": 2,
-  "editor.insertSpaces": false,
-  "eslint.validate": ["javascript", "javascriptreact"],
-  "files.eol": "\n",
-  "files.insertFinalNewline": true,
-  "prettier.requireConfig": true,
-  "prettier.singleQuote": true,
-  "prettier.printWidth": 100,
-  "prettier.tabWidth": 2,
-  "prettier.useTabs": true,
-  "files.exclude": {
-    "**/node_modules": true
-  },
-  "search.exclude": {
-    "**/node_modules": true
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
-}
-```
-
----
-
-### `.vscode/extensions.json`
-
-```json
-{
-  "recommendations": [
-    "dbaeumer.vscode-eslint",
-    "donjayamanne.jquerysnippets",
-    "ecmel.vscode-html-css",
-    "esbenp.prettier-vscode",
-    "formulahendry.auto-rename-tag",
-    "formulahendry.code-runner",
-    "kisstkondoros.vscode-gutter-preview",
-    "ms-ceintl.vscode-language-pack-ko",
-    "ms-vscode.live-server",
-    "naumovs.color-highlight",
-    "oderwat.indent-rainbow",
-    "pranaygp.vscode-css-peek",
-    "ritwickdey.liveserver",
-    "solnurkarim.html-to-css-autocompletion",
-    "streetsidesoftware.code-spell-checker",
-    "vincaslt.highlight-matching-tag",
-    "zignd.html-css-class-completion"
-  ]
-}
-```
-
----
-
-### `.prettierrc`
-
-```json
-{
-  "semi": true,
-  "singleQuote": true,
-  "tabWidth": 2,
-  "useTabs": true,
-  "printWidth": 100,
-  "bracketSpacing": true,
-  "trailingComma": "all"
-}
-```
-
----
-
-### `.eslintrc.js`
-
-```js
-module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-    node: true,
-  },
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:jsx-a11y/recommended',
-    'plugin:import/errors',
-    'plugin:import/warnings',
-    'plugin:prettier/recommended',
-  ],
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-  plugins: ['react', 'jsx-a11y', 'import'],
-  rules: {
-    'react/react-in-jsx-scope': 'off',
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        semi: true,
-        printWidth: 100,
-        tabWidth: 2,
-        useTabs: true,
-        bracketSpacing: true,
-        trailingComma: 'all',
-      },
-    ],
-    semi: ['error', 'always'],
-    'no-unused-vars': 'warn',
-  },
-  settings: {
-    react: {
-      version: 'detect',
-    },
-  },
-};
-```
-
----
-
-Happy Coding! ✨
+프로젝트 관련 자세한 내용과 회고는 Velog 및 GitHub 레포지토리를 참고해 주세요.
+- [Velog 개발일지 및 회고]([https://velog.io/@yourusername](https://velog.io/@seoha1ae/sidemenu))  
